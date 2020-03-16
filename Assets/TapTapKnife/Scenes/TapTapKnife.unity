@@ -295,6 +295,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 2277663039656355326, guid: dc576e9493aaffc40892c79efa7beb24,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2277663039656355314, guid: dc576e9493aaffc40892c79efa7beb24,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -400,5 +405,17 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2277663039656355315, guid: dc576e9493aaffc40892c79efa7beb24,
+        type: 3}
+      propertyPath: boardHitVFX
+      value: 
+      objectReference: {fileID: 6924016795772371209, guid: e4ff2d9f435d45747a731e198f2d8de7,
+        type: 3}
+    - target: {fileID: 2277663039656355315, guid: dc576e9493aaffc40892c79efa7beb24,
+        type: 3}
+      propertyPath: boardDestroyVFX
+      value: 
+      objectReference: {fileID: 4980313195269196235, guid: 473328b8697eb8b48a8356d4be404898,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc576e9493aaffc40892c79efa7beb24, type: 3}
