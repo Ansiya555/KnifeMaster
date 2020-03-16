@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3500335080832483793
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3500335080832483795}
+  - component: {fileID: 3500335080832483794}
+  m_Layer: 0
+  m_Name: GameDownloader
+  m_TagString: AssetBundleDownloader
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3500335080832483795
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3500335080832483793}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3500335080832483794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3500335080832483793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05c07acf19e4d0b47b4708dcd0c6a4ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebug: 0
+  storePlatform: 0
+  devGameName: 
+  gameMainAssetUrl: 
+  GamePrefab: {fileID: 0}
+  useLocalGamePrefab: 0
+  LoadingCanvasPrefab: {fileID: 3467854081077829739, guid: 74ff8ef9fb01e774b8354a73879c6682,
+    type: 3}
+  EventSystemPrefab: {fileID: 5405290031851784940, guid: d5cf4a7d13dd07a4c91b8902ffade6bb,
+    type: 3}
+  isInternetConnectionAvailable: 0
+  assetBundle: {fileID: 0}
