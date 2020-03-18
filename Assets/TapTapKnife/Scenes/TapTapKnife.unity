@@ -416,5 +416,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5895133782595713574, guid: 09b3adfc9e1e07449ae1ea2f1ec003f2,
         type: 3}
+    - target: {fileID: 2277663039656355315, guid: dc576e9493aaffc40892c79efa7beb24,
+        type: 3}
+      propertyPath: boardDestroyVFX
+      value: 
+      objectReference: {fileID: 4980313195269196235, guid: f86fc5e3289523647938f36c576be89d,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc576e9493aaffc40892c79efa7beb24, type: 3}
