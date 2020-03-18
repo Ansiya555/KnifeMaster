@@ -44,6 +44,8 @@ public class Knife : MonoBehaviour
             TapTapKnife.isGameOver = true;
             gameObject.transform.parent = null;
             animator.enabled = true;
+            GameObject knifeHitKnifeVFX = Instantiate(TapTapKnife.instance.knifeHitKnifeVfx, TapTapKnife.instance.particlePos, Quaternion.identity);
+            Destroy(knifeHitKnifeVFX, 1f);
             TapTapKnife.instance.redPanelEnabler();
         }
 

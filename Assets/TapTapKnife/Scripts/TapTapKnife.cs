@@ -73,6 +73,7 @@ public class TapTapKnife : MonoBehaviour
     public AudioSource splBoardBreakSFX;
 
     public GameObject collectibleVFX;
+    public GameObject knifeHitKnifeVfx;
     public GameObject boardHitVFX;
     public GameObject boardDestroyVFX;
     public GameObject knifeUIParent;
