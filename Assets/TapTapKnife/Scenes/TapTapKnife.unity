@@ -414,7 +414,7 @@ PrefabInstance:
         type: 3}
       propertyPath: knifeHitKnifeVfx
       value: 
-      objectReference: {fileID: 3774347749582733529, guid: e05bba16db99a5d4ba7cc43829f0fab2,
+      objectReference: {fileID: 5895133782595713574, guid: 09b3adfc9e1e07449ae1ea2f1ec003f2,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc576e9493aaffc40892c79efa7beb24, type: 3}
