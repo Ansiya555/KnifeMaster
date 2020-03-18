@@ -506,6 +506,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 0.1
   magnitude: 1
+  brokenBoard: {fileID: 8737987841388775416, guid: afc3d1e8ade8f894ab1210103b3cb206,
+    type: 3}
+  boardBreakDelay: 0
   boardSkins:
   - {fileID: 21300000, guid: b2eb3eb9f87d6054bbf5b383066317cb, type: 3}
   - {fileID: 21300000, guid: f9a9b4bd0356d8c44829fc6703d1ca3a, type: 3}
@@ -527,7 +530,7 @@ MonoBehaviour:
     type: 3}
   knivesToThrowText: {fileID: 2277663040373420923}
   knifeInitialPos: {x: 0, y: -3, z: 0}
-  knifeThrownPos: {x: 0, y: 0.75, z: 0}
+  knifeThrownPos: {x: 0, y: 0.8, z: 0}
   particlePos: {x: 0, y: 0.5, z: 0}
   knifeFadeLerpSpeed: 20
   knifeThrowSpeed: 250
@@ -683,13 +686,16 @@ MonoBehaviour:
   boardBreakSFX: {fileID: 2277663039786485458}
   knifeHitSplBoardSFX: {fileID: 2277663041560606006}
   splBoardBreakSFX: {fileID: 2277663040228311147}
-  boardHitVFX: {fileID: 1211716646053835923, guid: 75f6e031979154c40835da4df20b52fe,
+  collectibleVFX: {fileID: 3417331884123884689, guid: fbcea645a16977f46a46e046cb596422,
     type: 3}
-  boardDestroyVFX: {fileID: 4980313195269196235, guid: f86fc5e3289523647938f36c576be89d,
+  boardHitVFX: {fileID: 6924016795772371209, guid: e4ff2d9f435d45747a731e198f2d8de7,
+    type: 3}
+  boardDestroyVFX: {fileID: 4980313195269196235, guid: 473328b8697eb8b48a8356d4be404898,
     type: 3}
   knifeUIParent: {fileID: 6293915904273132216}
   knifeUIObject: {fileID: 281923709240193430, guid: 8f40e2ebc1b355644907b116caa97a51,
     type: 3}
+  knifes: []
   knivesLeft: 0
 --- !u!1 &2277663039786485468
 GameObject:

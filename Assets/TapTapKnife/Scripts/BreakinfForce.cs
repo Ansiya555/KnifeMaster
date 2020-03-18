@@ -7,6 +7,7 @@ public class BreakinfForce : MonoBehaviour
     [SerializeField] Vector2 direction;
     [SerializeField] float delay;
     [SerializeField] float gravity;
+    [SerializeField] Quaternion finalRotValue;
 
     // Start is called before the first frame update
     Rigidbody2D rigidbody2D;
@@ -24,5 +25,15 @@ public class BreakinfForce : MonoBehaviour
         //rigidbody2D.AddForce(-direction);
         rigidbody2D.gravityScale = gravity;
     }
+
+    IEnumerator Rotate()
+    {
+        while (transform.rotation != finalRotValue)
+        {
+
+            yield return null;
+        }
+    }
+
 
 }

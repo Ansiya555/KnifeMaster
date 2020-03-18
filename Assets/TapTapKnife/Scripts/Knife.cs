@@ -24,10 +24,11 @@ public class Knife : MonoBehaviour
         if (other.gameObject.name.Contains(TapTapKnife.boardString)&&!OnBoard)
         {
             OnBoard = true;
-            if(!TapTapKnife.instance.knifeHitKnifeSFX.isPlaying)
+            print("coll");
+          /*  if(!TapTapKnife.instance.knifeHitKnifeSFX.isPlaying)
             {
                 TapTapKnife.instance.knifeHitBoardSFX.Play();
-            }
+            }*/
             TapTapKnife.instance.UpdateScore(TapTapKnife.instance.knifeHitPoints);
             GameObject boardVFX = Instantiate(TapTapKnife.instance.boardHitVFX, TapTapKnife.instance.particlePos,Quaternion.identity);
             Destroy(boardVFX, 1f);
@@ -50,6 +51,8 @@ public class Knife : MonoBehaviour
         {
             TapTapKnife.instance.collectibleSFX.Play();
             TapTapKnife.instance.UpdateScore(TapTapKnife.instance.collectiblesPoints - TapTapKnife.instance.knifeHitPoints);
+            GameObject collectibleVFX = Instantiate(TapTapKnife.instance.collectibleVFX, TapTapKnife.instance.particlePos, Quaternion.identity);
+            Destroy(collectibleVFX, 1f);
             //ToDo: VFX and Update Score
             Destroy(other.gameObject);
         }

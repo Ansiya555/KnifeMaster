@@ -10,6 +10,8 @@ public class TapTapKnife : MonoBehaviour
     [Header("Shake Test")]
     [SerializeField] float duration;
     [SerializeField] float magnitude;
+    [SerializeField] GameObject brokenBoard;
+    [SerializeField] float boardBreakDelay;
 
     [Header("Gameplay Variables")]
     [SerializeField] Sprite[] boardSkins;
@@ -70,6 +72,7 @@ public class TapTapKnife : MonoBehaviour
     public AudioSource knifeHitSplBoardSFX;
     public AudioSource splBoardBreakSFX;
 
+    public GameObject collectibleVFX;
     public GameObject boardHitVFX;
     public GameObject boardDestroyVFX;
     public GameObject knifeUIParent;
@@ -88,7 +91,8 @@ public class TapTapKnife : MonoBehaviour
     //private Variables
     GameObject currentBoard;
     GameObject knifeParent = null;
-    List<GameObject> knifeObjects = new List<GameObject>();
+     List<GameObject> knifeObjects = new List<GameObject>();
+    [SerializeField] List<GameObject> knifes = new List<GameObject>();
     int currentLevel = 0;
     int score = 0;
     [SerializeField] int knivesLeft;
@@ -116,11 +120,11 @@ public class TapTapKnife : MonoBehaviour
 
     private void Update()
     {
-        if (isAttacking)
+/*if (isAttacking)
         {
             ThrowKnife();
-        }
-
+        }*/
+        
         if (Input.GetMouseButtonDown(0) && canThrow && gameStarted)
         {
 
@@ -131,7 +135,7 @@ public class TapTapKnife : MonoBehaviour
             {
                 StartCoroutine(Shake(duration, magnitude));
             }
-            
+            ThrowKnife();
         }
 
        
@@ -1048,15 +1052,17 @@ public class TapTapKnife : MonoBehaviour
         knivesToThrowText.text = "Knives to Throw: " + numOfKnives.ToString();
 
         knifeObjects = new List<GameObject>(numOfKnives);
-
-        if(knifeParent == null)
+        knifes = new List<GameObject>(numOfKnives);
+        if (knifeParent == null)
         {
             knifeParent = new GameObject("Knife Parent");
         }
 
         for (int i = 0; i < numOfKnives; i++)
         {
-            knifeObjects.Add(Instantiate(knifePrefab,knifeParent.transform));
+            GameObject knife = Instantiate(knifePrefab, knifeParent.transform);
+            knifeObjects.Add(knife);
+            knifes.Add(knife);
         }
 
         for (int i = 0; i < knifeObjects.Count; i++)
@@ -1092,18 +1098,21 @@ public class TapTapKnife : MonoBehaviour
     {
         if(!isGameOver)
         {
+            print("sdfd");
             int nextKnifeIndex = 0;
             for (int i = 0; i < knifeObjects.Count; i++)
             {
                 if (knifeObjects[i] != null && knifeObjects[i].activeInHierarchy)
                 {
                     nextKnifeIndex = i;
-                    knifeObjects[i].transform.position = Vector3.MoveTowards(knifeObjects[i].transform.position, knifeThrownPos, knifeThrowSpeed * Time.deltaTime);
+                 //   knifeObjects[i].transform.position = Vector3.MoveTowards(knifeObjects[i].transform.position, knifeThrownPos, knifeThrowSpeed * Time.deltaTime);
+                    knifeObjects[i].transform.position = knifeThrownPos;
+                    knifeHitBoardSFX.Play();
                     break;
                 }
             }
-            
 
+            print("hello");
             if (nextKnifeIndex < knifeObjects.Count - 1)
             {
                 if (knifeObjects[nextKnifeIndex].transform.position == knifeThrownPos)
@@ -1126,23 +1135,44 @@ public class TapTapKnife : MonoBehaviour
                     knifeObjects[nextKnifeIndex].transform.parent = currentBoard.transform;
                     knifeObjects[nextKnifeIndex].transform.localScale = Vector3.one;
                     knifeObjects[nextKnifeIndex] = null;
-                    GameObject temp = currentBoard;
-                    currentBoard = null;
-                    for (int i = 0; i < UIKnives.Count; i++)
-                    {
-                        Destroy(UIKnives[i]);
-                    }
-                    knivesLeft = 0;
-                    UIKnives.Clear();
-                    StartCoroutine(coDestroyBoard(temp));
+                    StartCoroutine(BoardBreakDelay());
                 }
-            
+
             }        
         }        
     }
 
+    private void BoardBreak()
+    {
+        
+    }
 
-    public IEnumerator Shake(float duration, float magnitude)
+    IEnumerator BoardBreakDelay()
+    {
+        yield return new WaitForSeconds(.25f);
+        GameObject temp = currentBoard;
+        currentBoard = null;
+        for (int i = 0; i < knifes.Count; i++)
+        {
+           knifes[i].transform.parent = null;
+           knifes[i].GetComponent<KnifeForce>().enabled = true;
+            Destroy(knifes[i], 1);
+        }
+
+        for (int i = 0; i < UIKnives.Count; i++)
+        {
+            Destroy(UIKnives[i]);
+        }
+        knivesLeft = 0;
+        UIKnives.Clear();
+        GameObject tempBoard= Instantiate(brokenBoard,new Vector3(0f,2f,0f),Quaternion.identity);
+        Destroy(tempBoard, boardBreakDelay);
+        StartCoroutine(coDestroyBoard(temp));
+
+
+    }
+
+        public IEnumerator Shake(float duration, float magnitude)
     {
         yield return new WaitForSeconds(.1f);
         Vector3 orignalPosition = currentBoard.transform.position;
@@ -1153,7 +1183,7 @@ public class TapTapKnife : MonoBehaviour
         while (elapsed < duration)
         {
             float x = 0f;
-            float y = Random.Range(2f, 2.25f) * magnitude;
+            float y = Random.Range(2f, 2.07f) * magnitude;
             if (currentBoard != null)
             {
                 currentBoard.transform.position = new Vector3(x, y, currentBoard.transform.position.z);            
