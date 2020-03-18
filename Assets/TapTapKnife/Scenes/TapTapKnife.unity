@@ -405,5 +405,11 @@ PrefabInstance:
       propertyPath: boardBreakDelay
       value: 0.25
       objectReference: {fileID: 0}
+    - target: {fileID: 2277663039656355315, guid: dc576e9493aaffc40892c79efa7beb24,
+        type: 3}
+      propertyPath: knifeHitKnifeVfx
+      value: 
+      objectReference: {fileID: 3774347749582733529, guid: e05bba16db99a5d4ba7cc43829f0fab2,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc576e9493aaffc40892c79efa7beb24, type: 3}
