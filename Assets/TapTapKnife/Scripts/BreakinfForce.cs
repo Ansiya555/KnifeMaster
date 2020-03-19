@@ -8,6 +8,7 @@ public class BreakinfForce : MonoBehaviour
     [SerializeField] float delay;
     [SerializeField] float gravity;
     [SerializeField] Quaternion finalRotValue;
+     float steps =5;
 
     // Start is called before the first frame update
     Rigidbody2D rigidbody2D;
@@ -17,6 +18,7 @@ public class BreakinfForce : MonoBehaviour
          rigidbody2D.AddForce(direction);
         StartCoroutine(GravityActivator());
         rigidbody2D.gravityScale = 1;
+        StartCoroutine(Rotate());
     }
 
     IEnumerator GravityActivator()
@@ -28,10 +30,10 @@ public class BreakinfForce : MonoBehaviour
 
     IEnumerator Rotate()
     {
-        while (transform.rotation != finalRotValue)
+        for (int i = 0; i < steps; i++) 
         {
-
-            yield return null;
+            transform.Rotate(transform.localRotation.eulerAngles.x, transform.localRotation.eulerAngles.y, (Mathf.Round(transform.localRotation.eulerAngles.z * 10) / 10) + (finalRotValue.z/steps));
+            yield return new WaitForSeconds(.15f);
         }
     }
 

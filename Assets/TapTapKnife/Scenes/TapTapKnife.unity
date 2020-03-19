@@ -203,6 +203,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &556054488 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 556054488, guid: dc576e9493aaffc40892c79efa7beb24,
+    type: 3}
+  m_PrefabInstance: {fileID: 2277663040331758378}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &556054490 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 556054490, guid: dc576e9493aaffc40892c79efa7beb24,
+    type: 3}
+  m_PrefabInstance: {fileID: 2277663040331758378}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556054488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &669148167 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7277443036668847879, guid: dc576e9493aaffc40892c79efa7beb24,
+    type: 3}
+  m_PrefabInstance: {fileID: 2277663040331758378}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1761465138
 GameObject:
   m_ObjectHideFlags: 0
@@ -294,11 +324,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MainCanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 2277663039656355326, guid: dc576e9493aaffc40892c79efa7beb24,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2277663039656355314, guid: dc576e9493aaffc40892c79efa7beb24,
         type: 3}
@@ -407,20 +432,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2277663039656355315, guid: dc576e9493aaffc40892c79efa7beb24,
         type: 3}
-      propertyPath: boardBreakDelay
-      value: 0.25
+      propertyPath: tutoralButton
+      value: 
+      objectReference: {fileID: 2277663040331758379}
+    - target: {fileID: 2277663039656355315, guid: dc576e9493aaffc40892c79efa7beb24,
+        type: 3}
+      propertyPath: tutorialImage
+      value: 
+      objectReference: {fileID: 556054490}
+    - target: {fileID: 2277663039656355315, guid: dc576e9493aaffc40892c79efa7beb24,
+        type: 3}
+      propertyPath: tutorialPanel
+      value: 
+      objectReference: {fileID: 556054488}
+    - target: {fileID: 2277663039656355315, guid: dc576e9493aaffc40892c79efa7beb24,
+        type: 3}
+      propertyPath: infoButton
+      value: 
+      objectReference: {fileID: 669148167}
+    - target: {fileID: 556054488, guid: dc576e9493aaffc40892c79efa7beb24, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2277663039656355315, guid: dc576e9493aaffc40892c79efa7beb24,
-        type: 3}
-      propertyPath: knifeHitKnifeVfx
-      value: 
-      objectReference: {fileID: 5895133782595713574, guid: 09b3adfc9e1e07449ae1ea2f1ec003f2,
-        type: 3}
-    - target: {fileID: 2277663039656355315, guid: dc576e9493aaffc40892c79efa7beb24,
-        type: 3}
-      propertyPath: boardDestroyVFX
-      value: 
-      objectReference: {fileID: 4980313195269196235, guid: f86fc5e3289523647938f36c576be89d,
-        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc576e9493aaffc40892c79efa7beb24, type: 3}
+--- !u!114 &2277663040331758379 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 497796503780976588, guid: dc576e9493aaffc40892c79efa7beb24,
+    type: 3}
+  m_PrefabInstance: {fileID: 2277663040331758378}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556054488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

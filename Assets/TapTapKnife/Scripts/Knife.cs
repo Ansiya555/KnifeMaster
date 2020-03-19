@@ -24,13 +24,13 @@ public class Knife : MonoBehaviour
         if (other.gameObject.name.Contains(TapTapKnife.boardString)&&!OnBoard)
         {
             OnBoard = true;
-            print("coll");
+
           /*  if(!TapTapKnife.instance.knifeHitKnifeSFX.isPlaying)
             {
                 TapTapKnife.instance.knifeHitBoardSFX.Play();
             }*/
             TapTapKnife.instance.UpdateScore(TapTapKnife.instance.knifeHitPoints);
-            GameObject boardVFX = Instantiate(TapTapKnife.instance.boardHitVFX, TapTapKnife.instance.particlePos,Quaternion.identity);
+            GameObject boardVFX = Instantiate(TapTapKnife.instance.boardHitVFX, TapTapKnife.instance.KnifehitparticlePos,Quaternion.EulerAngles(new Vector3(0f,90f,-90f)));
             Destroy(boardVFX, 1f);
             Destroy(this);
         }
@@ -39,8 +39,7 @@ public class Knife : MonoBehaviour
         {
             print("HitKnifeHit   "+GetInstanceID());
             gameObject.GetComponent<BoxCollider2D>().enabled = false;
-            TapTapKnife.instance.knifeHitBoardSFX.Stop();
-            TapTapKnife.instance.knifeHitKnifeSFX.Play();
+            
             TapTapKnife.isGameOver = true;
             gameObject.transform.parent = null;
             animator.enabled = true;
@@ -53,7 +52,7 @@ public class Knife : MonoBehaviour
         {
             TapTapKnife.instance.collectibleSFX.Play();
             TapTapKnife.instance.UpdateScore(TapTapKnife.instance.collectiblesPoints - TapTapKnife.instance.knifeHitPoints);
-            GameObject collectibleVFX = Instantiate(TapTapKnife.instance.collectibleVFX, TapTapKnife.instance.particlePos, Quaternion.identity);
+            GameObject collectibleVFX = Instantiate(TapTapKnife.instance.collectibleVFX, other.gameObject.transform.position, Quaternion.identity);
             Destroy(collectibleVFX, 1f);
             //ToDo: VFX and Update Score
             Destroy(other.gameObject);

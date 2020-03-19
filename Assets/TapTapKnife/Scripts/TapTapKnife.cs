@@ -10,8 +10,21 @@ public class TapTapKnife : MonoBehaviour
     [Header("Shake Test")]
     [SerializeField] float duration;
     [SerializeField] float magnitude;
-    [SerializeField] GameObject brokenBoard;
+    [SerializeField] int brokenboardIndex;
+    [SerializeField] GameObject[] brokenBoards;
+    [SerializeField] GameObject[] bonusBrokenBoards;
+    [SerializeField] Sprite[] tutorialSprites;
+    [SerializeField] Image tutorialImage;
+    [SerializeField] GameObject tutorialPanel;
     [SerializeField] float boardBreakDelay;
+    [SerializeField] TextMeshProUGUI stageText;
+
+    [Header("Shake Test")]
+    [SerializeField] Image[] StageDots;
+    [SerializeField] Sprite ActiveStageDot;
+    [SerializeField] Sprite InActiveStageDots;
+    [SerializeField] Sprite ActiveBonusDots;
+    [SerializeField] Sprite InActiveBonusDots;
 
     [Header("Gameplay Variables")]
     [SerializeField] Sprite[] boardSkins;
@@ -25,6 +38,7 @@ public class TapTapKnife : MonoBehaviour
     [SerializeField] Vector3 knifeInitialPos;
     [SerializeField] Vector3 knifeThrownPos;
     public Vector3 particlePos;
+    public Vector3 KnifehitparticlePos;
 
     [SerializeField] float knifeFadeLerpSpeed = 0.5f;
     [SerializeField] float knifeThrowSpeed = .15f;
@@ -45,6 +59,8 @@ public class TapTapKnife : MonoBehaviour
     [SerializeField] Button volumeButton;
     [SerializeField] Button restartButton;
     [SerializeField] Button homeButton;
+    [SerializeField] Button infoButton;
+    [SerializeField] Button tutoralButton;
     [SerializeField] GameObject homeScreenPanel;
     [SerializeField] GameObject gameOverPanel;
     public GameObject redPanel;
@@ -72,6 +88,8 @@ public class TapTapKnife : MonoBehaviour
     public AudioSource knifeHitSplBoardSFX;
     public AudioSource splBoardBreakSFX;
 
+
+  
     public GameObject collectibleVFX;
     public GameObject knifeHitKnifeVfx;
     public GameObject boardHitVFX;
@@ -103,6 +121,8 @@ public class TapTapKnife : MonoBehaviour
     
     bool canThrow = false;
     bool gameStarted = false;
+    int stageCount;
+    int tutorialCount =0;
 
 
     private void Awake()
@@ -121,10 +141,10 @@ public class TapTapKnife : MonoBehaviour
 
     private void Update()
     {
-/*if (isAttacking)
+        if (isAttacking)
         {
             ThrowKnife();
-        }*/
+        }
         
         if (Input.GetMouseButtonDown(0) && canThrow && gameStarted)
         {
@@ -136,7 +156,7 @@ public class TapTapKnife : MonoBehaviour
             {
                 StartCoroutine(Shake(duration, magnitude));
             }
-            ThrowKnife();
+          //  ThrowKnife();
         }
 
        
@@ -736,22 +756,27 @@ public class TapTapKnife : MonoBehaviour
             {
                 case Stages.Stage_1:
                     difficulty = Difficulty.Easy;
+                    stageCount = 0;
                     return difficulty;
 
                 case Stages.Stage_2:
                     difficulty = Difficulty.EasyMedium;
+                    stageCount = 1;
                     return difficulty;
 
                 case Stages.Stage_3:
                     difficulty = Difficulty.EasyHard;
+                    stageCount = 2;
                     return difficulty;
 
                 case Stages.Stage_4:
                     difficulty = Difficulty.Medium;
+                    stageCount = 3;
                     return difficulty;
 
                 case Stages.Bonus:
                     difficulty = Difficulty.Bonus;
+                    stageCount = 4;
                     return difficulty;
 
                 case Stages.Max:
@@ -767,22 +792,27 @@ public class TapTapKnife : MonoBehaviour
             {
                 case Stages.Stage_1:
                     difficulty = Difficulty.EasyMedium;
+                    stageCount = 0;
                     break;
 
                 case Stages.Stage_2:
                     difficulty = Difficulty.EasyHard;
+                    stageCount = 1;
                     break;
 
                 case Stages.Stage_3:
                     difficulty = Difficulty.Medium;
+                    stageCount = 2;
                     break;
 
                 case Stages.Stage_4:
                     difficulty = Difficulty.MediumHard;
+                    stageCount = 3;
                     break;
 
                 case Stages.Bonus:
                     difficulty = Difficulty.Bonus;
+                    stageCount = 4;
                     break;
 
                 case Stages.Max:
@@ -798,22 +828,27 @@ public class TapTapKnife : MonoBehaviour
             {
                 case Stages.Stage_1:
                     difficulty = Difficulty.EasyMedium;
+                    stageCount = 0;
                     break;
 
                 case Stages.Stage_2:
                     difficulty = Difficulty.Medium;
+                    stageCount = 1;
                     break;
 
                 case Stages.Stage_3:
                     difficulty = Difficulty.MediumHard;
+                    stageCount = 2;
                     break;
 
                 case Stages.Stage_4:
                     difficulty = Difficulty.Hard;
+                    stageCount = 3;
                     break;
 
                 case Stages.Bonus:
                     difficulty = Difficulty.Bonus;
+                    stageCount = 4;
                     break;
 
                 case Stages.Max:
@@ -844,6 +879,21 @@ public class TapTapKnife : MonoBehaviour
         SpawnKnivesToThrow(knives);
         UIKnifeIndicator(knives);
         SpawnBoard();
+        if(currentStage==Stages.Bonus)
+        {
+            StageDots[stageCount].sprite = ActiveBonusDots;
+            stageText.text = "Stage Bonus";
+            currentLevel += 1;
+        }
+        else
+        {
+            StageDots[stageCount].sprite = ActiveStageDot;
+            stageText.text = "Stage " + (stageCount + 1).ToString();
+          //  StageDots[stageCount].color = Color.yellow;
+        }
+       
+
+       // currentLevel+=1;
     }
 
 
@@ -862,7 +912,7 @@ public class TapTapKnife : MonoBehaviour
 
     void KnifeUIUpdater()
     {
-        print(knivesLeft);
+
         Color colour = UIKnives[knivesLeft-1].GetComponent<Image>().color;
         colour.a = .42f;
         UIKnives[knivesLeft-1].GetComponent<Image>().color= colour;
@@ -877,11 +927,13 @@ public class TapTapKnife : MonoBehaviour
         GetBoardWithKnivesAndCollectibles(currentDifficulty);
         if (currentDifficulty==Difficulty.Bonus)
         {
-            currentBoard.GetComponent<SpriteRenderer>().sprite = bonusBoardSkins[Random.Range(0, bonusBoardSkins.Length)];
+            brokenboardIndex = Random.Range(0, bonusBoardSkins.Length);
+            currentBoard.GetComponent<SpriteRenderer>().sprite = bonusBoardSkins[brokenboardIndex];
         }
         else
         {
-            currentBoard.GetComponent<SpriteRenderer>().sprite = boardSkins[Random.Range(0, boardSkins.Length)];
+            brokenboardIndex = Random.Range(0, boardSkins.Length);
+           currentBoard.GetComponent<SpriteRenderer>().sprite = boardSkins[brokenboardIndex];
         }
         SetRotationOfBoard(currentDifficulty);
         currentBoardSprite=currentBoard.GetComponent<SpriteRenderer>();
@@ -892,7 +944,36 @@ public class TapTapKnife : MonoBehaviour
         playButton.onClick.AddListener(OnPlayButtonClicked);
         restartButton.onClick.AddListener(OnRestartButtonClicked);
         homeButton.onClick.AddListener(OnHomeButtonClicked);
+        tutoralButton.onClick.AddListener(TutorialButtonClicked);
+        infoButton.onClick.AddListener(InfoButtonClicked);
     }
+
+
+    void InfoButtonClicked()
+    {
+
+        tutorialPanel.SetActive(true);
+        TutorialButtonClicked();
+    }
+
+
+    void TutorialButtonClicked()
+    {
+        if (tutorialCount==3)
+        {
+            tutorialPanel.SetActive(false);
+            tutorialCount = 0;
+        }
+        else
+        {
+          
+            tutorialImage.sprite = tutorialSprites[tutorialCount];
+            tutorialCount += 1;
+        }
+        
+        
+    }
+
 
     void OnPlayButtonClicked()
     {
@@ -1099,21 +1180,23 @@ public class TapTapKnife : MonoBehaviour
     {
         if(!isGameOver)
         {
-            print("sdfd");
+            print("zsddsdf");
             int nextKnifeIndex = 0;
             for (int i = 0; i < knifeObjects.Count; i++)
             {
+                
                 if (knifeObjects[i] != null && knifeObjects[i].activeInHierarchy)
                 {
+                   // isAttacking = false;
                     nextKnifeIndex = i;
-                 //   knifeObjects[i].transform.position = Vector3.MoveTowards(knifeObjects[i].transform.position, knifeThrownPos, knifeThrowSpeed * Time.deltaTime);
+                   // knifeObjects[i].transform.position = Vector3.MoveTowards(knifeObjects[i].transform.position, knifeThrownPos, knifeThrowSpeed * Time.deltaTime);
                     knifeObjects[i].transform.position = knifeThrownPos;
                     knifeHitBoardSFX.Play();
                     break;
                 }
             }
 
-            print("hello");
+
             if (nextKnifeIndex < knifeObjects.Count - 1)
             {
                 if (knifeObjects[nextKnifeIndex].transform.position == knifeThrownPos)
@@ -1136,7 +1219,9 @@ public class TapTapKnife : MonoBehaviour
                     knifeObjects[nextKnifeIndex].transform.parent = currentBoard.transform;
                     knifeObjects[nextKnifeIndex].transform.localScale = Vector3.one;
                     knifeObjects[nextKnifeIndex] = null;
-                    StartCoroutine(BoardBreakDelay());
+
+                   // StartCoroutine(BoardBreakDelay());
+                   BoardBreakDelay();
                 }
 
             }        
@@ -1148,16 +1233,22 @@ public class TapTapKnife : MonoBehaviour
         
     }
 
-    IEnumerator BoardBreakDelay()
+    void BoardBreakDelay()
     {
-        yield return new WaitForSeconds(.25f);
-        GameObject temp = currentBoard;
-        currentBoard = null;
         for (int i = 0; i < knifes.Count; i++)
         {
-           knifes[i].transform.parent = null;
+            knifes[i].transform.parent = null;          
+        }
+        GameObject temp = currentBoard;
+        currentBoard = null;
+      
+      //  yield return new WaitForSeconds(.1f);
+       
+        for (int i = 0; i < knifes.Count; i++)
+        {
+          // knifes[i].transform.parent = null;
            knifes[i].GetComponent<KnifeForce>().enabled = true;
-            Destroy(knifes[i], 1);
+            Destroy(knifes[i], 1f);
         }
 
         for (int i = 0; i < UIKnives.Count; i++)
@@ -1166,28 +1257,37 @@ public class TapTapKnife : MonoBehaviour
         }
         knivesLeft = 0;
         UIKnives.Clear();
-        GameObject tempBoard= Instantiate(brokenBoard,new Vector3(0f,2f,0f),Quaternion.identity);
-        Destroy(tempBoard, boardBreakDelay);
+        GameObject tempBoard;
+       if (currentDifficulty==Difficulty.Bonus)
+        {
+             tempBoard = Instantiate(bonusBrokenBoards[brokenboardIndex], new Vector3(-1.15f,1f, 0f), Quaternion.identity);
+        }
+        else
+        {
+             tempBoard = Instantiate(brokenBoards[brokenboardIndex], new Vector3(-1.15f, 1f, 0f), Quaternion.identity);
+        }
+       // Destroy(tempBoard, boardBreakDelay);
         StartCoroutine(coDestroyBoard(temp));
 
 
     }
 
-        public IEnumerator Shake(float duration, float magnitude)
+    public IEnumerator Shake(float duration, float magnitude)
     {
+
         yield return new WaitForSeconds(.1f);
         Vector3 orignalPosition = currentBoard.transform.position;
         float elapsed = 0f;
         Color color = currentBoardSprite.color;
         color.a = .95f;
-        currentBoardSprite.color= color;
+        currentBoardSprite.color = color;
         while (elapsed < duration)
         {
             float x = 0f;
-            float y = Random.Range(2f, 2.07f) * magnitude;
+            float y = Random.Range(1f, 1.07f) * magnitude;
             if (currentBoard != null)
             {
-                currentBoard.transform.position = new Vector3(x, y, currentBoard.transform.position.z);            
+                currentBoard.transform.position = new Vector3(x, y, 0f);
             }
             else
             {
@@ -1196,9 +1296,13 @@ public class TapTapKnife : MonoBehaviour
             elapsed += Time.deltaTime;
             yield return 0;
         }
-        currentBoard.transform.position = orignalPosition;
-        color.a = 1f;
-        currentBoardSprite.color = color;
+        if (currentBoard != null)
+        {
+
+            currentBoard.transform.position = orignalPosition;
+            color.a = 1f;
+            currentBoardSprite.color = color;
+        }
     }
 
     IEnumerator coDestroyBoard(GameObject board)
@@ -1208,6 +1312,11 @@ public class TapTapKnife : MonoBehaviour
         yield return new WaitForSeconds(1f);
         Destroy(clone);
         currentStage++;
+        if(currentStage==Stages.Max)
+        {
+            currentStage = Stages.Stage_1;
+            StageDotsUI();
+        }
         NextTurn(currentStage);
     }
 
@@ -1229,10 +1338,10 @@ public class TapTapKnife : MonoBehaviour
         gameStarted = false;
         gameOverPanel.SetActive(true);
         Destroy(currentBoard);
-        for(int i=0;i<knifeObjects.Count;i++)
+        for (int i = 0; i < knifeObjects.Count; i++)
         {
             Destroy(knifeObjects[i]);
-            
+
         }
         for (int i = 0; i < UIKnives.Count; i++)
         {
@@ -1243,7 +1352,23 @@ public class TapTapKnife : MonoBehaviour
         isAttacking = false;
         score = 0;
         UpdateScore(0);
-        
+        StageDotsUI();
+    }
+
+    private void StageDotsUI()
+    {
+        for (int j = 0; j < StageDots.Length; j++)
+        {
+            if (j < StageDots.Length - 1)
+            {
+                StageDots[j].sprite = InActiveStageDots;
+            }
+            else
+            {
+                StageDots[j].sprite = InActiveBonusDots;
+            }
+
+        }
     }
 
     public IEnumerator CameraShake()
@@ -1275,6 +1400,9 @@ public class TapTapKnife : MonoBehaviour
  IEnumerator RedPanelEnabler()
 
     {
+        print("SFX playing");
+        knifeHitBoardSFX.Stop();
+        knifeHitKnifeSFX.Play();
         redPanel.SetActive(true);
         StartCoroutine(CameraShake());
         yield return new WaitForSeconds(.15f);

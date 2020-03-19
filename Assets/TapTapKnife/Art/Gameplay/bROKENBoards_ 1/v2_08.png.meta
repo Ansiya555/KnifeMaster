@@ -1,7 +1,19 @@
 fileFormatVersion: 2
 guid: b1c2a3bee361c394a9b5a5e846b1bcd1
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -6984242167263528212
+    second: v2_08_0
+  - first:
+      213: -8270321814493349582
+    second: v2_08_1
+  - first:
+      213: -1861627952793585571
+    second: v2_08_2
+  - first:
+      213: 1437898707810695255
+    second: v2_08_3
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -96,7 +108,91 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: v2_08_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 292.5
+        width: 292.5
+        height: 292.5
+      alignment: 9
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d29173622a5db02468a7f4d31dd756d6
+      internalID: -6984242167263528212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: v2_08_1
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 292.5
+        width: 292.5
+        height: 292.5
+      alignment: 9
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 512686faecc805641813b4daba1b56f7
+      internalID: -8270321814493349582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: v2_08_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0.5
+        width: 292.5
+        height: 292.5
+      alignment: 9
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f127e5b0c257e2b4eb9c13c8e23fd53a
+      internalID: -1861627952793585571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: v2_08_3
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 0.5
+        width: 292.5
+        height: 292.5
+      alignment: 9
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c444cb080344d8d4aa46de5b64420b80
+      internalID: 1437898707810695255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
