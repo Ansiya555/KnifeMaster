@@ -35,12 +35,13 @@ public class Knife : MonoBehaviour
             Destroy(this);
         }
 
-        if (other.gameObject.name.Contains(TapTapKnife.knifeString))
+       if (other.gameObject.name.Contains(TapTapKnife.knifeString))
         {
-            print("HitKnifeHit   "+GetInstanceID());
+          //  print("HitKnifeHit   "+GetInstanceID());
             gameObject.GetComponent<BoxCollider2D>().enabled = false;
             
             TapTapKnife.isGameOver = true;
+            TapTapKnife.instance.StopAllCoroutines();
             gameObject.transform.parent = null;
             animator.enabled = true;
             GameObject knifeHitKnifeVFX = Instantiate(TapTapKnife.instance.knifeHitKnifeVfx, TapTapKnife.instance.particlePos, Quaternion.identity);
@@ -48,6 +49,7 @@ public class Knife : MonoBehaviour
             TapTapKnife.instance.redPanelEnabler();
         }
 
+    
         if (other.gameObject.name.Contains(TapTapKnife.collectibleString))
         {
             TapTapKnife.instance.collectibleSFX.Play();

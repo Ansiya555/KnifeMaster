@@ -164,7 +164,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &556054489
 RectTransform:
   m_ObjectHideFlags: 0
@@ -482,6 +482,138 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &2109886131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2109886132}
+  - component: {fileID: 2109886133}
+  m_Layer: 5
+  m_Name: ButtonSound
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2109886132
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109886131}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2277663040056011036}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!82 &2109886133
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109886131}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: d701302ff8a088d4a967fca771a417e1, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &215018169673065352
 GameObject:
   m_ObjectHideFlags: 0
@@ -1007,10 +1139,11 @@ MonoBehaviour:
   - {fileID: 8737987841388775416, guid: bc0c54433997cd645876de8613c2fbb9, type: 3}
   - {fileID: 8737987841388775416, guid: b63fbf879437cd448a5118222e137542, type: 3}
   tutorialSprites:
-  - {fileID: 21300000, guid: 6eeb5ccd9ce1189409fd75f93b912934, type: 3}
-  - {fileID: 21300000, guid: ffedb40776450ec47be44d72b1f5c332, type: 3}
-  - {fileID: 21300000, guid: 71b62a64630a7924488e0ba08e1e0966, type: 3}
-  tutorialImage: []
+  - {fileID: 21300000, guid: 3b9b833184171d640a41406e6920bace, type: 3}
+  - {fileID: 21300000, guid: c24a0b9fd3b28c14bbe733c9e88724c9, type: 3}
+  - {fileID: 21300000, guid: 84f6d37a7e70c9c4bbbe2483406a36bc, type: 3}
+  tutorialImage: {fileID: 556054490}
+  tutorialPanel: {fileID: 556054488}
   boardBreakDelay: 0.5
   stageText: {fileID: 647580309873438790}
   StageDots:
@@ -1019,10 +1152,13 @@ MonoBehaviour:
   - {fileID: 1482436676}
   - {fileID: 555146064}
   - {fileID: 273670060}
+  volumeImage: {fileID: 4425593402439881839}
   ActiveStageDot: {fileID: 21300000, guid: ba736ced1a6c875468180f91cbdde880, type: 3}
   InActiveStageDots: {fileID: 21300000, guid: 6de905a517ade8d4baf5606ced36818f, type: 3}
   ActiveBonusDots: {fileID: 21300000, guid: 84d6b59070e500d4cbdcdec305dac197, type: 3}
   InActiveBonusDots: {fileID: 21300000, guid: 1432240e9ba25604e993ad28477dc163, type: 3}
+  VolumeOFF: {fileID: 21300000, guid: ae46a93116c7d1e4ea8e4993ebf656a6, type: 3}
+  VolumeOn: {fileID: 21300000, guid: 484f823b2a7349a429e7aa3b435bc1c8, type: 3}
   boardSkins:
   - {fileID: 21300000, guid: b2eb3eb9f87d6054bbf5b383066317cb, type: 3}
   - {fileID: 21300000, guid: f9a9b4bd0356d8c44829fc6703d1ca3a, type: 3}
@@ -1106,28 +1242,26 @@ MonoBehaviour:
   - {fileID: 8845532280341521773, guid: 6ab7bb21a1f04b2498cc72369beabfee, type: 3}
   - {fileID: 7737309522938953395, guid: 48842f25100239a4bb18df16e4e9ba67, type: 3}
   - {fileID: 7084531837086871773, guid: 44da95c8f6ae6604fa422cb043b67b75, type: 3}
-  bonusBoards:
-  - {fileID: 5554515940273286200, guid: e96f99955e3546a48a8acb45ee3b94a9, type: 3}
-  - {fileID: 5349531252294143210, guid: 4be9ada7ce8401c4d950c1e466760886, type: 3}
-  - {fileID: 7134247708239090815, guid: 879bfb37109a2a5429bbe5358ba047b3, type: 3}
-  - {fileID: 8962188198985521202, guid: 52e62a6496c455b4a917ea3862fd7dea, type: 3}
-  - {fileID: 7337932448900983085, guid: 45e58fcb6fda70344bc691410bc17127, type: 3}
+  bonusBoard: {fileID: 7337932448900983085, guid: 45e58fcb6fda70344bc691410bc17127,
+    type: 3}
   UIKnives: []
   playButton: {fileID: 7954912312841491100}
   volumeButton: {fileID: 2844037138506232512}
   restartButton: {fileID: 1144067065892188865}
   homeButton: {fileID: 6386869423476728095}
+  infoButton: {fileID: 7277443036668847879}
+  tutoralButton: {fileID: 497796503780976588}
   homeScreenPanel: {fileID: 735646574599899028}
   gameOverPanel: {fileID: 4636119051424830968}
   redPanel: {fileID: 215018169673065352}
   numOfKnives:
-  - {x: 6, y: 6}
-  - {x: 6, y: 6}
-  - {x: 6, y: 6}
-  - {x: 6, y: 6}
-  - {x: 6, y: 6}
-  - {x: 6, y: 6}
-  - {x: 6, y: 6}
+  - {x: 6, y: 12}
+  - {x: 6, y: 18}
+  - {x: 6, y: 18}
+  - {x: 6, y: 12}
+  - {x: 6, y: 12}
+  - {x: 6, y: 12}
+  - {x: 17, y: 17}
   rotationSpeed:
   - 4
   - 2
@@ -1201,6 +1335,8 @@ MonoBehaviour:
   boardBreakSFX: {fileID: 2277663039786485458}
   knifeHitSplBoardSFX: {fileID: 2277663041560606006}
   splBoardBreakSFX: {fileID: 2277663040228311147}
+  buttonSFX: {fileID: 2109886133}
+  audioSources: []
   collectibleVFX: {fileID: 3417331884123884689, guid: fbcea645a16977f46a46e046cb596422,
     type: 3}
   knifeHitKnifeVfx: {fileID: 5895133782595713574, guid: 09b3adfc9e1e07449ae1ea2f1ec003f2,
@@ -1379,6 +1515,7 @@ RectTransform:
   - {fileID: 2277663039786485469}
   - {fileID: 2277663041560606001}
   - {fileID: 2277663040228311146}
+  - {fileID: 2109886132}
   m_Father: {fileID: 2277663039656355314}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
