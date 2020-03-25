@@ -7,36 +7,18 @@ using UnityEngine.UI;
 
 public class TapTapKnife : MonoBehaviour
 {
-    [Header("Shake Test")]
-    [SerializeField] float duration;
-    [SerializeField] float magnitude;
-    [SerializeField] int brokenboardIndex;
-    [SerializeField] GameObject[] brokenBoards;
-    [SerializeField] GameObject[] bonusBrokenBoards;
-    [SerializeField] Sprite[] tutorialSprites;
-    [SerializeField] Image tutorialImage;
-    [SerializeField] GameObject tutorialPanel;
-    [SerializeField] float boardBreakDelay;
+    [Header("Text")]
     [SerializeField] TextMeshProUGUI stageText;
-
-    [Header("Shake Test")]
-    [SerializeField] Image[] StageDots;
-    [SerializeField] Image volumeImage;
-    [SerializeField] Sprite ActiveStageDot;
-    [SerializeField] Sprite InActiveStageDots;
-    [SerializeField] Sprite ActiveBonusDots;
-    [SerializeField] Sprite InActiveBonusDots;
-    [SerializeField] Sprite VolumeOFF;
-    [SerializeField] Sprite VolumeOn;
+    [SerializeField] TextMeshProUGUI scoreText;
+  
 
     [Header("Gameplay Variables")]
     [SerializeField] Sprite[] boardSkins;
     [SerializeField] Sprite[] bonusBoardSkins;
-    [SerializeField] Sprite[] knifeSkins;
-
+    [SerializeField] GameObject[] brokenBoards;
+    [SerializeField] GameObject[] bonusBrokenBoards;
     [SerializeField] GameObject knifePrefab;
 
-    [SerializeField] TextMeshProUGUI knivesToThrowText;
 
     [SerializeField] Vector3 knifeInitialPos;
     [SerializeField] Vector3 knifeThrownPos;
@@ -54,10 +36,11 @@ public class TapTapKnife : MonoBehaviour
     [SerializeField] GameObject[] hardBoards;
     [SerializeField] GameObject[] easyHardBoards;
     [SerializeField] GameObject bonusBoard;
-    [SerializeField] List <GameObject> UIKnives=new List<GameObject>();
+    List <GameObject> UIKnives=new List<GameObject>();
 
 
     [Header("UI Elements")]
+    [SerializeField] Image[] StageDots;
     [SerializeField] Button playButton;
     [SerializeField] Button volumeButton;
     [SerializeField] Button restartButton;
@@ -66,7 +49,17 @@ public class TapTapKnife : MonoBehaviour
     [SerializeField] Button tutoralButton;
     [SerializeField] GameObject homeScreenPanel;
     [SerializeField] GameObject gameOverPanel;
-    public GameObject redPanel;
+    [SerializeField] Image volumeImage;
+    [SerializeField] GameObject redPanel;
+    [SerializeField] GameObject tutorialPanel;
+
+    [SerializeField] Sprite ActiveStageDot;
+    [SerializeField] Sprite InActiveStageDots;
+    [SerializeField] Sprite ActiveBonusDots;
+    [SerializeField] Sprite InActiveBonusDots;
+    [SerializeField] Sprite VolumeOFF;
+    [SerializeField] Sprite VolumeOn;
+
 
 
     [Header("Values Based on Difficulty")]
@@ -74,24 +67,21 @@ public class TapTapKnife : MonoBehaviour
     [SerializeField] float[] rotationSpeed;
     [SerializeField] Vector3[] forwardBackwardAngles; //x is Forward Angle // y is Backwards Angle // z is num of frames to complete one whole circle
     [SerializeField] float stopWaitTime;
-
     [SerializeField] AnimationCurve rotationType;
 
     [Header("Scoring System")]
     public int knifeHitPoints = 10;
     public int collectiblesPoints = 50;
 
-    [SerializeField] TextMeshProUGUI scoreText;
+   
 
     [Header("SFX and VFX")]
     public AudioSource collectibleSFX;
-    public AudioSource knifeHitBoardSFX;
-    public AudioSource knifeHitKnifeSFX;
-    public AudioSource boardBreakSFX;
-    public AudioSource knifeHitSplBoardSFX;
-    public AudioSource splBoardBreakSFX;
-    public AudioSource buttonSFX;
-    public AudioSource[] audioSources;
+    [SerializeField] AudioSource knifeHitBoardSFX;
+    [SerializeField] AudioSource knifeHitKnifeSFX;
+    [SerializeField] AudioSource boardBreakSFX;
+    [SerializeField] AudioSource buttonSFX;
+     AudioSource[] audioSources;
 
 
 
@@ -113,22 +103,34 @@ public class TapTapKnife : MonoBehaviour
     public static bool isGameOver = false;
 
     //private Variables
+
     GameObject currentBoard;
     GameObject knifeParent = null;
-     List<GameObject> knifeObjects = new List<GameObject>();
-    [SerializeField] List<GameObject> knifes = new List<GameObject>();
-    int currentLevel = 0;
-    int score = 0;
-    [SerializeField] int knivesLeft;
+
+    List<GameObject> knifeObjects = new List<GameObject>();
+    List<GameObject> knives = new List<GameObject>();//List for saving all the spawned knives till board breaks
+   
+   
     Stages currentStage;
     Difficulty currentDifficulty;
-    bool isAttacking = false;
-    
+
+    bool isAttacking = false;   
     bool canThrow = false;
-    bool gameStarted = false;
-    int stageCount;
-    int tutorialCount =0;
+    bool gameStarted = false;  
     bool volume = true;
+
+    SpriteRenderer currentBoardSprite;
+
+    int currentLevel = 0;
+    int score = 0;
+    int stageCount;
+    int tutorialCount = 0;
+    int brokenboardIndex;
+    int knivesLeft;
+
+
+    float boardShakeDuration = .15f;
+    float shakeMagnitude = 1f;
 
     private void Awake()
     {
@@ -139,37 +141,26 @@ public class TapTapKnife : MonoBehaviour
 
     private void Start()
     {
-        //Initializing Static Variables
-       // isGameOver = false;
-       // canThrow = true;
+        
         ButtonAddListeners();
         StartGame();
     }
 
     private void Update()
     {
-       /*
-        *if (isAttacking)
-        {
-            ThrowKnife();
-        }
-        */
+      
+       
         
         if (Input.GetMouseButtonDown(0) && canThrow && gameStarted && knivesLeft>=0)
         {
 
             canThrow = false;
             isAttacking = true;
-            KnifeUIUpdater();
-          //  if(knivesLeft!=0)
-           // {
-                
-            // }
+            KnifeUIUpdater();          
             if (knivesLeft != 0)
             {
-                StartCoroutine(Shake(duration, magnitude));
-                StartCoroutine(ThrowKnife(knifeObjects[knivesLeft],false));
-             //   print("hello");
+                StartCoroutine(Shake(boardShakeDuration, shakeMagnitude));
+                StartCoroutine(ThrowKnife(knifeObjects[knivesLeft],false));            
                 knivesLeft -= 1;
                 knifeObjects[knivesLeft].SetActive(true);
                 StartCoroutine(coKnifeFadeIn(knifeObjects[knivesLeft]));
@@ -181,11 +172,7 @@ public class TapTapKnife : MonoBehaviour
         }
 
        
-      /*  if (Input.GetMouseButtonDown(1) )
-        {
-            StartCoroutine(Shake(duration,magnitude));
-        }
-        */
+    
     }
 
     #region Related to Rotation Based on Difficulty
@@ -268,28 +255,23 @@ public class TapTapKnife : MonoBehaviour
     {
         switch (easy)
         {
-            case RotationEasy.Continuous_1:
-                print("Continuous ==> " + rotationSpeed[0] + " secs");
+            case RotationEasy.Continuous_1:               
                 StartCoroutine(coContinuous(rotationSpeed[0]));
                 break;
 
-            case RotationEasy.Continuous_2:
-                print("Continuous ==> " + rotationSpeed[1] + " secs");
+            case RotationEasy.Continuous_2:               
                 StartCoroutine(coContinuous(rotationSpeed[1]));
                 break;
 
-            case RotationEasy.SlowInSlowOut:
-                print("Stop And Go Slow In Slow Out ==> " + rotationSpeed[2] + " secs");
+            case RotationEasy.SlowInSlowOut:              
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[2], 0, true, false));
                 break;
 
-            case RotationEasy.SlowInSlowOut_3:
-                print("Stop And Go Slow In Slow Out After 3 Rounds ==> " + rotationSpeed[3] + " secs");
+            case RotationEasy.SlowInSlowOut_3:               
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[3], 3, true, false));
                 break;
 
             case RotationEasy.ReverseSlowInSlowOut:
-                print("Stop And Reverse Slow In Slow Out ==> " + rotationSpeed[4] + " secs"); 
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[4], 0, true, true));
                 break;
 
@@ -303,52 +285,42 @@ public class TapTapKnife : MonoBehaviour
         switch (easyMedium)
         {
             case RotationEasyMedium.Continuous_1:
-                print("Continuous ==> " + rotationSpeed[0] + " secs");
                 StartCoroutine(coContinuous(rotationSpeed[0]));
                 break;
 
             case RotationEasyMedium.Continuous_2:
-                print("Continuous ==> " + rotationSpeed[1] + " secs");
                 StartCoroutine(coContinuous(rotationSpeed[1]));
                 break;
 
             case RotationEasyMedium.SlowInSlowOut:
-                print("Stop And Go Slow In Slow Out ==> " + rotationSpeed[2] + " secs");
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[2], 0, true, false));
                 break;
 
             case RotationEasyMedium.SlowInSlowOut_3:
-                print("Stop And Go Slow In Slow Out After 3 Rounds ==> " + rotationSpeed[3] + " secs");
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[3], 3, true, false));
                 break;
 
             case RotationEasyMedium.ReverseSlowInSlowOut:
-                print("Stop And Reverse Slow In Slow Out ==> " + rotationSpeed[4] + " secs");
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[4], 0, true, true));
                 break;
 
             case RotationEasyMedium.StopAndGo:
-                print("Stop and Go ==> " + rotationSpeed[5] + " secs");
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[5], 0, false, false));
                 break;
 
             case RotationEasyMedium.StopAndReverse:
-                print("Stop and Reverse ==> " + rotationSpeed[6] + " secs");
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[6], 0, false, true));
                 break;
 
             case RotationEasyMedium.Rotate_180_Reverse:
-                print("180 Forward 360 Reverse ==> " + rotationSpeed[7] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[7], forwardBackwardAngles[7].x, forwardBackwardAngles[7].y, (int)forwardBackwardAngles[7].z, false, false));
                 break;
 
             case RotationEasyMedium.Rotate_180_StopAndGo:
-                print("180 Stop And Go ==> " + rotationSpeed[8] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[8], forwardBackwardAngles[8].x, forwardBackwardAngles[8].y, (int)forwardBackwardAngles[8].z, false, true));
                 break;
 
             case RotationEasyMedium.Rotate_90_Reverse_180_SlowInSlowOut:
-                print("180 Forward 360 Reverse Slow In Slow Out ==> " + rotationSpeed[9] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[9], forwardBackwardAngles[9].x, forwardBackwardAngles[9].y, (int)forwardBackwardAngles[9].z, true, false));
                 break;
 
@@ -362,27 +334,22 @@ public class TapTapKnife : MonoBehaviour
         switch (medium)
         {
             case RotationMedium.StopAndGo:
-                print("Stop and Go ==> " + rotationSpeed[5] + " secs");
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[5], 0, false, false));
                 break;
 
             case RotationMedium.StopAndReverse:
-                print("Stop and Reverse ==> " + rotationSpeed[6] + " secs");
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[6], 0, false, true));
                 break;
 
             case RotationMedium.Rotate_180_Reverse:
-                print("180 Forward 360 Reverse ==> " + rotationSpeed[7] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[7], forwardBackwardAngles[7].x, forwardBackwardAngles[7].y, (int)forwardBackwardAngles[7].z, false, false));
                 break;
 
             case RotationMedium.Rotate_180_StopAndGo:
-                print("180 Stop And Go ==> " + rotationSpeed[8] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[8], forwardBackwardAngles[8].x, forwardBackwardAngles[8].y, (int)forwardBackwardAngles[8].z, false, true));
                 break;
 
             case RotationMedium.Rotate_90_Reverse_180_SlowInSlowOut:
-                print("180 Forward 360 Reverse Slow In Slow Out ==> " + rotationSpeed[9] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[9], forwardBackwardAngles[9].x, forwardBackwardAngles[9].y, (int)forwardBackwardAngles[9].z, true, false));
                 break;
 
@@ -396,47 +363,38 @@ public class TapTapKnife : MonoBehaviour
         switch (mediumHard)
         {
             case RotationMediumHard.StopAndGo:
-                print("Stop and Go ==> " + rotationSpeed[5] + " secs");
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[5], 0, false, false));
                 break;
 
             case RotationMediumHard.StopAndReverse:
-                print("Stop and Reverse ==> " + rotationSpeed[6] + " secs");
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[6], 0, false, true));
                 break;
 
             case RotationMediumHard.Rotate_180_Reverse:
-                print("180 Forward 360 Reverse ==> " + rotationSpeed[7] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[7], forwardBackwardAngles[7].x, forwardBackwardAngles[7].y, (int)forwardBackwardAngles[7].z, false, false));
                 break;
 
             case RotationMediumHard.Rotate_180_StopAndGo:
-                print("180 Stop And Go ==> " + rotationSpeed[8] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[8], forwardBackwardAngles[8].x, forwardBackwardAngles[8].y, (int)forwardBackwardAngles[8].z, false, true));
                 break;
 
             case RotationMediumHard.Rotate_90_Reverse_180_SlowInSlowOut:
-                print("180 Forward 360 Reverse Slow In Slow Out ==> " + rotationSpeed[9] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[9], forwardBackwardAngles[9].x, forwardBackwardAngles[9].y, (int)forwardBackwardAngles[9].z, true, false));
                 break;
 
             case RotationMediumHard.Rotate_90_Reverse_180:
-                print("90 Forward 180 Reverse ==> " + rotationSpeed[10] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[10], forwardBackwardAngles[10].x, forwardBackwardAngles[10].y, (int)forwardBackwardAngles[10].z, false, false));
                 break;
 
             case RotationMediumHard.Rotate_45_Reverse_90:
-                print("45 Forward 90 Reverse ==> " + rotationSpeed[11] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[11], forwardBackwardAngles[11].x, forwardBackwardAngles[11].y, (int)forwardBackwardAngles[11].z, false, false));
                 break;
 
             case RotationMediumHard.Rotate_45_Reverse_90_SlowInSlowOut:
-                print("45 Forward 90 Reverse Slow In Slow Out ==> " + rotationSpeed[12] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[12], forwardBackwardAngles[12].x, forwardBackwardAngles[12].y, (int)forwardBackwardAngles[12].z, true, false));
                 break;
 
             case RotationMediumHard.Rotate_30_Reverse_150:
-                print("45 Forward 90 Reverse Slow In Slow Out ==> " + rotationSpeed[13] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[13], forwardBackwardAngles[13].x, forwardBackwardAngles[13].y, (int)forwardBackwardAngles[13].z, false, false));
                 break;
 
@@ -450,22 +408,18 @@ public class TapTapKnife : MonoBehaviour
         switch (hard)
         {
             case RotationHard.Rotate_90_Reverse_180:
-                print("90 Forward 180 Reverse ==> " + rotationSpeed[10] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[10], forwardBackwardAngles[10].x, forwardBackwardAngles[10].y, (int)forwardBackwardAngles[10].z, false, false));
                 break;
 
             case RotationHard.Rotate_45_Reverse_90:
-                print("45 Forward 90 Reverse ==> " + rotationSpeed[11] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[11], forwardBackwardAngles[11].x, forwardBackwardAngles[11].y, (int)forwardBackwardAngles[11].z, false, false));
                 break;
 
             case RotationHard.Rotate_45_Reverse_90_SlowInSlowOut:
-                print("45 Forward 90 Reverse Slow In Slow Out ==> " + rotationSpeed[12] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[12], forwardBackwardAngles[12].x, forwardBackwardAngles[12].y, (int)forwardBackwardAngles[12].z, true, false));
                 break;
 
             case RotationHard.Rotate_30_Reverse_150:
-                print("45 Forward 90 Reverse Slow In Slow Out ==> " + rotationSpeed[13] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[13], forwardBackwardAngles[13].x, forwardBackwardAngles[13].y, (int)forwardBackwardAngles[13].z, false, false));
                 break;
 
@@ -479,47 +433,38 @@ public class TapTapKnife : MonoBehaviour
         switch (easyHard)
         {
             case RotationEasyHard.Continuous_1:
-                print("Continuous ==> " + rotationSpeed[0] + " secs");
                 StartCoroutine(coContinuous(rotationSpeed[0]));
                 break;
 
             case RotationEasyHard.Continuous_2:
-                print("Continuous ==> " + rotationSpeed[1] + " secs");
                 StartCoroutine(coContinuous(rotationSpeed[1]));
                 break;
 
             case RotationEasyHard.SlowInSlowOut:
-                print("Stop And Go Slow In Slow Out ==> " + rotationSpeed[2] + " secs");
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[2], 0, true, false));
                 break;
 
             case RotationEasyHard.SlowInSlowOut_3:
-                print("Stop And Go Slow In Slow Out After 3 Rounds ==> " + rotationSpeed[3] + " secs");
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[3], 3, true, false));
                 break;
 
             case RotationEasyHard.ReverseSlowInSlowOut:
-                print("Stop And Reverse Slow In Slow Out ==> " + rotationSpeed[4] + " secs");
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[4], 0, true, true));
                 break;
 
             case RotationEasyHard.Rotate_90_Reverse_180:
-                print("90 Forward 180 Reverse ==> " + rotationSpeed[10] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[10], forwardBackwardAngles[10].x, forwardBackwardAngles[10].y, (int)forwardBackwardAngles[10].z, false, false));
                 break;
 
             case RotationEasyHard.Rotate_45_Reverse_90:
-                print("45 Forward 90 Reverse ==> " + rotationSpeed[11] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[11], forwardBackwardAngles[11].x, forwardBackwardAngles[11].y, (int)forwardBackwardAngles[11].z, false, false));
                 break;
 
             case RotationEasyHard.Rotate_45_Reverse_90_SlowInSlowOut:
-                print("45 Forward 90 Reverse Slow In Slow Out ==> " + rotationSpeed[12] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[12], forwardBackwardAngles[12].x, forwardBackwardAngles[12].y, (int)forwardBackwardAngles[12].z, true, false));
                 break;
 
             case RotationEasyHard.Rotate_30_Reverse_150:
-                print("45 Forward 90 Reverse Slow In Slow Out ==> " + rotationSpeed[13] + " secs");
                 StartCoroutine(coReverseAtAngle(rotationSpeed[13], forwardBackwardAngles[13].x, forwardBackwardAngles[13].y, (int)forwardBackwardAngles[13].z, false, false));
                 break;
 
@@ -996,22 +941,17 @@ public class TapTapKnife : MonoBehaviour
     }
 
     void NextTurn(Stages stage)
-    {
-       
-        print("Current Stage: " + stage);
-        print("Current Level: "+currentLevel);
+    {       
         currentStage = stage;
         currentDifficulty = GetCurrentDifficulty(currentStage, currentLevel);
-       int knives = GetKnivesToThrow(currentDifficulty);
-      //  int knives = 1;
-       // knivesLeft = knives;
+        int knives = GetKnivesToThrow(currentDifficulty);    
         knivesLeft = knives-1;
         SpawnKnivesToThrow(knives);
         UIKnifeIndicator(knives);
         SpawnBoard();
         if(currentStage==Stages.Bonus)
         {
-            print("bonusstage");
+           
             foreach(Image sprite in StageDots)
             {
                 sprite.gameObject.SetActive(false);
@@ -1042,7 +982,7 @@ public class TapTapKnife : MonoBehaviour
             MovingObject.anchoredPosition = Vector3.MoveTowards(MovingObject.anchoredPosition, desiredPos, 700f*Time.deltaTime);
             yield return new WaitForSeconds(Time.deltaTime);
         }
-       // yield return null;
+       
     }
 
     Difficulty RandomSelection(Difficulty diffOne, Difficulty diffTwo)
@@ -1059,7 +999,7 @@ public class TapTapKnife : MonoBehaviour
         }
         return difficulty;
 
-     }
+    }
 
 
     void UIKnifeIndicator(int count)
@@ -1076,23 +1016,18 @@ public class TapTapKnife : MonoBehaviour
 
 
     void KnifeUIUpdater()
-    {
-
-       // Color colour = UIKnives[knivesLeft-1].GetComponent<Image>().color;
+    {    
         Color colour = UIKnives[knivesLeft].GetComponent<Image>().color;
-        colour.a = .42f;
-      //  UIKnives[knivesLeft-1].GetComponent<Image>().color= colour;
+        colour.a = .42f;     
         UIKnives[knivesLeft].GetComponent<Image>().color= colour;
-       // knivesLeft -= 1;
-
     }
 
-    SpriteRenderer currentBoardSprite;
 
-        void SpawnBoard()
-    {        
+
+    void SpawnBoard()
+    {
         GetBoardWithKnivesAndCollectibles(currentDifficulty);
-        if (currentDifficulty==Difficulty.Bonus)
+        if (currentDifficulty == Difficulty.Bonus)
         {
             brokenboardIndex = Random.Range(0, bonusBoardSkins.Length);
             currentBoard.GetComponent<SpriteRenderer>().sprite = bonusBoardSkins[brokenboardIndex];
@@ -1100,10 +1035,10 @@ public class TapTapKnife : MonoBehaviour
         else
         {
             brokenboardIndex = Random.Range(0, boardSkins.Length);
-           currentBoard.GetComponent<SpriteRenderer>().sprite = boardSkins[brokenboardIndex];
+            currentBoard.GetComponent<SpriteRenderer>().sprite = boardSkins[brokenboardIndex];
         }
         SetRotationOfBoard(currentDifficulty);
-        currentBoardSprite=currentBoard.GetComponent<SpriteRenderer>();
+        currentBoardSprite = currentBoard.GetComponent<SpriteRenderer>();
     }
 
     void ButtonAddListeners()
@@ -1121,7 +1056,7 @@ public class TapTapKnife : MonoBehaviour
     {
         buttonSFX.Play();
         tutorialPanel.SetActive(true);
-      //  TutorialButtonClicked();
+      
     }
 
     void VolumeButtonClicked()
@@ -1151,19 +1086,6 @@ public class TapTapKnife : MonoBehaviour
 
     void TutorialButtonClicked()
     {
-        // buttonSFX.Play();
-        /*  if (tutorialCount==3)
-          {
-              tutorialPanel.SetActive(false);
-              tutorialCount = 0;
-          }
-          else
-          {
-
-              tutorialImage.sprite = tutorialSprites[tutorialCount];
-              tutorialCount += 1;
-          }*/
-
         tutorialPanel.SetActive(false);
     }
 
@@ -1172,7 +1094,6 @@ public class TapTapKnife : MonoBehaviour
     {
         buttonSFX.Play();
         homeScreenPanel.SetActive(false);
-
         gameStarted = true;
     }
 
@@ -1181,9 +1102,7 @@ public class TapTapKnife : MonoBehaviour
         buttonSFX.Play();
         isGameOver = false;
         gameStarted = true;
-        canThrow = true;
-        print("game restarted");
-        //reset all the values
+        canThrow = true;      
         StartGame();
         gameOverPanel.SetActive(false);
     }
@@ -1326,10 +1245,9 @@ public class TapTapKnife : MonoBehaviour
 
     void SpawnKnivesToThrow(int numOfKnives)
     {
-        knivesToThrowText.text = "Knives to Throw: " + numOfKnives.ToString();
-
+   //     knivesToThrowText.text = "Knives to Throw: " + numOfKnives.ToString();
         knifeObjects = new List<GameObject>(numOfKnives);
-        knifes = new List<GameObject>(numOfKnives);
+        knives = new List<GameObject>(numOfKnives);
         if (knifeParent == null)
         {
             knifeParent = new GameObject("Knife Parent");
@@ -1339,12 +1257,12 @@ public class TapTapKnife : MonoBehaviour
         {
             GameObject knife = Instantiate(knifePrefab, knifeParent.transform);
             knifeObjects.Add(knife);
-            knifes.Add(knife);
+            knives.Add(knife);
         }
 
         for (int i = 0; i < knifeObjects.Count; i++)
         {
-           // if(i == 0)
+           
             if(i == knifeObjects.Count-1)
             {
                 StartCoroutine(coKnifeFadeIn(knifeObjects[i]));
@@ -1372,58 +1290,7 @@ public class TapTapKnife : MonoBehaviour
         }
     }
 
-    /*  void ThrowKnife()
-      {
-          if(!isGameOver)
-          {
-              print("zsddsdf");
-              int nextKnifeIndex = 0;
-              for (int i = 0; i < knifeObjects.Count; i++)
-              {
-
-                  if (knifeObjects[i] != null && knifeObjects[i].activeInHierarchy)
-                  {
-                     // isAttacking = false;
-                      nextKnifeIndex = i;
-                     // knifeObjects[i].transform.position = Vector3.MoveTowards(knifeObjects[i].transform.position, knifeThrownPos, knifeThrowSpeed * Time.deltaTime);
-                      knifeObjects[i].transform.position = knifeThrownPos;
-                      knifeHitBoardSFX.Play();
-                      break;
-                  }
-              }
-
-
-              if (nextKnifeIndex < knifeObjects.Count - 1)
-              {
-                  if (knifeObjects[nextKnifeIndex].transform.position == knifeThrownPos)
-                  {
-                      isAttacking = false;
-                      knifeObjects[nextKnifeIndex].transform.parent = currentBoard.transform;
-                      knifeObjects[nextKnifeIndex].transform.localScale = Vector3.one;
-                      knifeObjects[nextKnifeIndex] = null;
-                      nextKnifeIndex++;
-                      knifeObjects[nextKnifeIndex].SetActive(true);
-                      StartCoroutine(coKnifeFadeIn(knifeObjects[nextKnifeIndex]));
-                  }
-              }
-
-              else
-              {
-                  if ((knifeObjects[nextKnifeIndex].transform.position == knifeThrownPos))
-                  {
-                      isAttacking = false;
-                      knifeObjects[nextKnifeIndex].transform.parent = currentBoard.transform;
-                      knifeObjects[nextKnifeIndex].transform.localScale = Vector3.one;
-                      knifeObjects[nextKnifeIndex] = null;
-
-                     // StartCoroutine(BoardBreakDelay());
-                     BoardBreakDelay();
-                  }
-
-              }        
-          }        
-      }
-      */
+    
     IEnumerator ThrowKnife(GameObject currentKnife, bool lastKnife)
     {
         while (currentKnife.transform.position != knifeThrownPos)
@@ -1441,31 +1308,21 @@ public class TapTapKnife : MonoBehaviour
     }
 
 
-
-
-
-
-   /* private void BoardBreak()
-    {
-        
-    }*/
-
     void BoardBreakDelay()
     {
-        for (int i = 0; i < knifes.Count; i++)
+        for (int i = 0; i < knives.Count; i++)
         {
-            knifes[i].transform.parent = null;          
+            knives[i].transform.parent = null;          
         }
         GameObject temp = currentBoard;
         currentBoard = null;
       
-      //  yield return new WaitForSeconds(.1f);
-       
-        for (int i = 0; i < knifes.Count; i++)
+     
+        for (int i = 0; i < knives.Count; i++)
         {
-          // knifes[i].transform.parent = null;
-           knifes[i].GetComponent<KnifeForce>().enabled = true;
-            Destroy(knifes[i], 1f);
+          
+            knives[i].GetComponent<KnifeForce>().enabled = true;
+            Destroy(knives[i], 1f);
             boardBreakSFX.Play(1);
         }
 
@@ -1484,7 +1341,6 @@ public class TapTapKnife : MonoBehaviour
         {
              tempBoard = Instantiate(brokenBoards[brokenboardIndex], new Vector3(-1.15f, 1f, 0f), Quaternion.identity);
         }
-       // Destroy(tempBoard, boardBreakDelay);
         StartCoroutine(coDestroyBoard(temp));
 
 
@@ -1548,9 +1404,8 @@ public class TapTapKnife : MonoBehaviour
 
     public void GameOverDelay()
     {
-
         StartCoroutine(GameOver());
-        // Destroy(gameObject);
+      
     }
 
 
@@ -1601,20 +1456,19 @@ public class TapTapKnife : MonoBehaviour
 
     public IEnumerator CameraShake()
     {
-        StopCoroutine(Shake(.1f, magnitude));
+        StopCoroutine(Shake(.1f, shakeMagnitude));
         Vector3 orignalPosition = Camera.main.transform.position;
         float elapsed = 0f;
         float duration = .1f;
         while (elapsed < duration)
         {
-            float x = Random.Range(-.5f, .25f) * magnitude;
-            float y = Random.Range(0f, .25f) * magnitude;
+            float x = Random.Range(-.5f, .25f) * shakeMagnitude;
+            float y = Random.Range(0f, .25f) * shakeMagnitude;
             Camera.main.transform.position = new Vector3(x, y, Camera.main.transform.position.z);
             elapsed += Time.deltaTime;
             yield return null;
         }
         Camera.main.transform.position = orignalPosition;
-        print(orignalPosition);
         GameOverDelay();
     }
 
@@ -1627,7 +1481,7 @@ public class TapTapKnife : MonoBehaviour
 
     IEnumerator RedPanelEnabler()
     {
-        print("SFX playing");
+      
         knifeHitBoardSFX.Stop();
         knifeHitKnifeSFX.Play();
         redPanel.SetActive(true);
@@ -1638,11 +1492,7 @@ public class TapTapKnife : MonoBehaviour
 
     }
 
-    public void TempRestartGame()
-    {
-        SceneManager.LoadScene(0);
-    }
-
+  
     #endregion
 
 }
