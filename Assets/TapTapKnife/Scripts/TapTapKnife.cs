@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Strobotnik.GUA;
+using GoogleMobileAds.Api;
 
 public class TapTapKnife : MonoBehaviour
 {
