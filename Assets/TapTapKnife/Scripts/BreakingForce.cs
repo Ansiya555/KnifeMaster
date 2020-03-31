@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BreakinfForce : MonoBehaviour
+public class BreakingForce : MonoBehaviour
 {
     [SerializeField] Vector2 direction;
     [SerializeField] float delay;

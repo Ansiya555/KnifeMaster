@@ -153,14 +153,13 @@ public class TapTapKnife : MonoBehaviour
 
 
     string mainJsonDataText;
-
     string scriptFilePath;
-
     string gameFolderName = "";
 
     bool analyticsSetupDone = false;
 
     GameObject analyticsGameobject;
+    GameObject TapTapKnifePrefab;
 
     public TextAsset localJsonGameValuesText;
     string gameValuesVersionPrefs = "";
@@ -169,6 +168,13 @@ public class TapTapKnife : MonoBehaviour
     int currentSoundState;
 
     string soundStringPrefs;
+
+    [SerializeField] System.Type knifeScript; 
+    [SerializeField] System.Type breakingForceScript; 
+    [SerializeField] System.Type knifeForceScript; 
+   
+    Vector3 camerPos=new Vector3(-.23f,0f,-10f);
+    [SerializeField] SpriteRenderer BgRenderer;
 
     private void Awake()
     {
@@ -196,7 +202,7 @@ public class TapTapKnife : MonoBehaviour
         GetMainAssetBundleAndMainJsonData();
         SetStringsFromMainJsonAndLoadPrefs();
 
-        // GetReferences();
+         GetReferences();
 
       //  AddAudioSources();
         ButtonAddListeners();
@@ -253,6 +259,234 @@ public class TapTapKnife : MonoBehaviour
     }
 
 
+    void GetReferences()
+    {
+        analyticsSetupDone = false;
+        bool useLocalGamePrefab = false;
+        if (gameDownloader != null)
+        {
+            useLocalGamePrefab = gameDownloader.useLocalGamePrefab;
+        }
+
+        if (mainAssetBundle != null)
+        {
+            if (isGooglePlayStoreVersion)
+            {
+                TapTapKnifePrefab = this.gameObject.transform.parent.gameObject;
+
+            }
+            else
+            {
+                TapTapKnifePrefab = Instantiate(mainAssetBundle.LoadAsset<GameObject>("TapTapKnifeGame"));
+
+            }
+
+
+            boardSkins[0]=mainAssetBundle.LoadAsset<Sprite>("v2_01");
+            boardSkins[1]=mainAssetBundle.LoadAsset<Sprite>("v2_02");
+            boardSkins[2]=mainAssetBundle.LoadAsset<Sprite>("v2_03");
+            boardSkins[3]=mainAssetBundle.LoadAsset<Sprite>("v2_04");
+            boardSkins[4]=mainAssetBundle.LoadAsset<Sprite>("v2_05");
+            boardSkins[5]=mainAssetBundle.LoadAsset<Sprite>("v2_06");
+            boardSkins[6]=mainAssetBundle.LoadAsset<Sprite>("v2_07");
+            boardSkins[7]=mainAssetBundle.LoadAsset<Sprite>("v2_08");
+            boardSkins[8]=mainAssetBundle.LoadAsset<Sprite>("v2_09");
+            boardSkins[9]=mainAssetBundle.LoadAsset<Sprite>("v2_10");
+           
+            bonusBoardSkins[0] = mainAssetBundle.LoadAsset<Sprite>("burger");
+            bonusBoardSkins[1] = mainAssetBundle.LoadAsset<Sprite>("Doughnut");
+            bonusBoardSkins[2] = mainAssetBundle.LoadAsset<Sprite>("pizza");
+
+            brokenBoards[0] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
+            brokenBoards[1] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
+            brokenBoards[2] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
+            brokenBoards[3] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
+            brokenBoards[4] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
+            brokenBoards[5] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
+            brokenBoards[6] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
+            brokenBoards[7] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
+            brokenBoards[8] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
+            brokenBoards[9] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
+            brokenBoards[10] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
+
+            bonusBrokenBoards[0] = mainAssetBundle.LoadAsset<GameObject>("burger");
+            bonusBrokenBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Doughnut");
+            bonusBrokenBoards[2] = mainAssetBundle.LoadAsset<GameObject>("pizza");
+
+
+
+
+            /* blockSlots.Clear();
+             BlockVariants.Clear();
+             ColourSprites.Clear();
+             blockSlots.Add(BlockSnatchPrefab.transform.GetChild(3).GetChild(0).gameObject);
+             blockSlots.Add(BlockSnatchPrefab.transform.GetChild(3).GetChild(1).gameObject);
+             blockSlots.Add(BlockSnatchPrefab.transform.GetChild(3).GetChild(2).gameObject);
+             slotPrefab = mainAssetBundle.LoadAsset<GameObject>("BaseTile");
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent1"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent2"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent3"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent4"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent5"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent6"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent7"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent8"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent9"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent10"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent11"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent12"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent13"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent14"));
+             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent15"));
+             gameOverPanel = BlockSnatchPrefab.transform.GetChild(2).GetChild(2).gameObject;
+             ColourSprites.Add(mainAssetBundle.LoadAsset<Sprite>("blue"));
+             ColourSprites.Add(mainAssetBundle.LoadAsset<Sprite>("green"));
+             ColourSprites.Add(mainAssetBundle.LoadAsset<Sprite>("purple"));
+             ColourSprites.Add(mainAssetBundle.LoadAsset<Sprite>("red"));
+             ColourSprites.Add(mainAssetBundle.LoadAsset<Sprite>("yellow"));
+             soundOn = mainAssetBundle.LoadAsset<Sprite>("sound on");
+             soundOff = mainAssetBundle.LoadAsset<Sprite>("sound off");
+             // Sprite TutorialImage1=
+
+
+
+
+             localJsonGameValuesText = mainAssetBundle.LoadAsset<TextAsset>("BlockSnatchGameValues.json");
+             scoreText = BlockSnatchPrefab.transform.GetChild(2).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
+             finalScoreText = BlockSnatchPrefab.transform.GetChild(2).GetChild(2).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>();
+             homeScreen = BlockSnatchPrefab.transform.GetChild(2).GetChild(3).gameObject;
+             grid = BlockSnatchPrefab.transform.GetChild(0).gameObject;
+             volumeIcon = BlockSnatchPrefab.transform.GetChild(2).GetChild(3).GetChild(3).GetComponent<Image>();
+             playButton = BlockSnatchPrefab.transform.GetChild(2).GetChild(3).GetChild(1).GetComponent<Button>();
+             homeButton = BlockSnatchPrefab.transform.GetChild(2).GetChild(2).GetChild(3).GetComponent<Button>();
+             restartButton = BlockSnatchPrefab.transform.GetChild(2).GetChild(2).GetChild(0).GetComponent<Button>();
+             soundButton = BlockSnatchPrefab.transform.GetChild(2).GetChild(3).GetChild(3).GetComponent<Button>();
+             infoButton = BlockSnatchPrefab.transform.GetChild(2).GetChild(3).GetChild(2).GetComponent<Button>();
+             multiplierGameobject = BlockSnatchPrefab.transform.GetChild(2).GetChild(1).gameObject;
+             SnatchCountDigit = BlockSnatchPrefab.transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
+             SnatchCountDigitShadow = BlockSnatchPrefab.transform.GetChild(2).GetChild(1).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
+             tutorialWindow = BlockSnatchPrefab.transform.GetChild(2).GetChild(4).gameObject;
+             tutorialButton = BlockSnatchPrefab.transform.GetChild(2).GetChild(4).gameObject.GetComponent<Button>();
+             print(tutorialImages);
+             tutorialImages.Add(tutorialWindow.transform.GetChild(0).gameObject);
+             tutorialImages.Add(tutorialWindow.transform.GetChild(1).gameObject);
+             tutorialImages.Add(tutorialWindow.transform.GetChild(2).gameObject);
+
+             gameOverSFX = mainAssetBundle.LoadAsset<AudioClip>("GameOver");
+             pickingSFX = mainAssetBundle.LoadAsset<AudioClip>("PickSound");
+             placingSFX = mainAssetBundle.LoadAsset<AudioClip>("PlacingSound");
+             incorrectPlacementSFX = mainAssetBundle.LoadAsset<AudioClip>("IncorrectPlacement");
+             rowCompletedSFX = mainAssetBundle.LoadAsset<AudioClip>("CompletedRow");
+ */
+            if (isGooglePlayStoreVersion == false)
+            {
+                if (File.Exists(scriptFilePath))
+                {
+
+                    assembly = System.Reflection.Assembly.LoadFrom(scriptFilePath);
+                    breakingForceScript = assembly.GetType("BreakingForce");
+                    knifeScript = assembly.GetType("Knife");
+                    knifeForceScript = assembly.GetType("KnifeForce");
+                 /*   if (BlockParent == null)
+                    {
+                        print("BlockParent is nul.l");
+                    }
+                    slotPrefab.AddComponent<Slot>();
+
+                    for (int i = 0; i < BlockVariants.Count; i++)
+                    {
+                        BlockVariants[i].transform.GetChild(0).gameObject.AddComponent<BlockParent>();
+                        SpriteRenderer[] units = BlockVariants[i].GetComponentsInChildren<SpriteRenderer>();
+                        for (int j = 0; j < units.Length; j++)
+                        {
+                            units[j].gameObject.AddComponent<BlockUnit>();
+                        }
+                    }
+
+                    */
+                }
+            }
+
+
+        }
+       // BgRenderer = TapTapKnifePrefab.transform.GetChild(0).GetComponent<SpriteRenderer>();
+        BgImageScaler();
+
+
+
+
+
+
+        if (analyticsGameobject == null)
+        {
+            if (isGooglePlayStoreVersion)
+            {
+                if (analyticsGameobject == null)
+                {
+                    analyticsGameobject = new GameObject("Analytics");
+                    analyticsGameobject.SetActive(false);
+                    analyticsGameobject.AddComponent<Analytics>().enabled = false;
+                }
+                if (mainJsonData != null)
+                {
+                    string trackingId = "";
+
+                    if (mainJsonData["mainData"]["analyticsTrackingID"])
+                    {
+                        trackingId = mainJsonData["mainData"]["analyticsTrackingID"];
+                    }
+
+
+                    string appName = gameTitle;
+
+                    if (mainJsonData["mainData"]["analyticsAppName"])
+                    {
+                        appName = mainJsonData["mainData"]["analyticsAppName"];
+                    }
+
+                    if (analyticsGameobject.GetComponent<Analytics>())
+                    {
+                        analyticsGameobject.GetComponent<Analytics>().trackingID = trackingId;
+                        analyticsGameobject.GetComponent<Analytics>().appName = appName;
+                        analyticsGameobject.GetComponent<Analytics>().enabled = true;
+                        analyticsGameobject.SetActive(true);
+                        analyticsSetupDone = true;
+                    }
+                }
+            }
+        }
+
+
+
+    }
+
+    public void BgImageScaler()
+    {
+        Camera.main.transform.position = camerPos;
+        Camera.main.orthographicSize = 5f;
+        /*   float screenRatio = (float)Screen.width / (float)Screen.height;
+          float targetRatio = BgRenderer.bounds.size.x / BgRenderer.bounds.size.y;
+
+          if (screenRatio >= targetRatio)
+           {
+               Camera.main.orthographicSize = BgRenderer.bounds.size.y / 2;
+           }
+           else
+           {
+               float differenceInSize = targetRatio / screenRatio;
+               Camera.main.orthographicSize = BgRenderer.bounds.size.y / 2 * differenceInSize;
+           }
+
+        float screenHeight = Camera.main.orthographicSize * 2f;
+        float screenWidth = screenHeight / Screen.height * Screen.width;
+        float width = screenWidth / BgRenderer.sprite.bounds.size.x;
+        float height = screenHeight / BgRenderer.sprite.bounds.size.y;
+        BgRenderer.transform.localScale = new Vector3(width, height, 1f);
+
+        */
+
+
+    }
 
     public void GetMainAssetBundleAndMainJsonData()
     {
