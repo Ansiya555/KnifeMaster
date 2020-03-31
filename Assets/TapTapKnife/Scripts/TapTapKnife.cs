@@ -6,13 +6,16 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Strobotnik.GUA;
 using GoogleMobileAds.Api;
+using System.IO;
 
 public class TapTapKnife : MonoBehaviour
 {
     [Header("Text")]
     [SerializeField] TextMeshProUGUI stageText;
     [SerializeField] TextMeshProUGUI scoreText;
-  
+    [SerializeField] TextMeshProUGUI plusFiftyText;
+    [SerializeField] Vector2 testPOs;
+   
 
     [Header("Gameplay Variables")]
     [SerializeField] Sprite[] boardSkins;
@@ -38,7 +41,7 @@ public class TapTapKnife : MonoBehaviour
     [SerializeField] GameObject[] hardBoards;
     [SerializeField] GameObject[] easyHardBoards;
     [SerializeField] GameObject bonusBoard;
-    List <GameObject> UIKnives=new List<GameObject>();
+    List<GameObject> UIKnives = new List<GameObject>();
 
 
     [Header("UI Elements")]
@@ -54,6 +57,9 @@ public class TapTapKnife : MonoBehaviour
     [SerializeField] Image volumeImage;
     [SerializeField] GameObject redPanel;
     [SerializeField] GameObject tutorialPanel;
+    public Canvas canvas;
+    public GameObject plusFifty;
+   
 
     [SerializeField] Sprite ActiveStageDot;
     [SerializeField] Sprite InActiveStageDots;
@@ -75,7 +81,7 @@ public class TapTapKnife : MonoBehaviour
     public int knifeHitPoints = 10;
     public int collectiblesPoints = 50;
 
-   
+
 
     [Header("SFX and VFX")]
     public AudioSource collectibleSFX;
@@ -83,7 +89,7 @@ public class TapTapKnife : MonoBehaviour
     [SerializeField] AudioSource knifeHitKnifeSFX;
     [SerializeField] AudioSource boardBreakSFX;
     [SerializeField] AudioSource buttonSFX;
-     AudioSource[] audioSources;
+    // AudioSource[] audioSources;
 
 
 
@@ -111,14 +117,14 @@ public class TapTapKnife : MonoBehaviour
 
     List<GameObject> knifeObjects = new List<GameObject>();
     List<GameObject> knives = new List<GameObject>();//List for saving all the spawned knives till board breaks
-   
-   
+
+
     Stages currentStage;
     Difficulty currentDifficulty;
 
-    bool isAttacking = false;   
+    bool isAttacking = false;
     bool canThrow = false;
-    bool gameStarted = false;  
+    bool gameStarted = false;
     bool volume = true;
 
     SpriteRenderer currentBoardSprite;
@@ -134,47 +140,314 @@ public class TapTapKnife : MonoBehaviour
     float boardShakeDuration = .15f;
     float shakeMagnitude = 1f;
 
+
+    public bool isGooglePlayStoreVersion;
+    string devGameName;
+    string gameTitle;
+    string paytmGamesLink;
+    SimpleJSON.JSONNode mainJsonData;
+    GameDownloader gameDownloader;
+    public System.Reflection.Assembly assembly;
+    public SimpleJSON.JSONNode gameValuesData;
+    public AssetBundle mainAssetBundle = null;
+
+
+    string mainJsonDataText;
+
+    string scriptFilePath;
+
+    string gameFolderName = "";
+
+    bool analyticsSetupDone = false;
+
+    GameObject analyticsGameobject;
+
+    public TextAsset localJsonGameValuesText;
+    string gameValuesVersionPrefs = "";
+    string gameValuesFileName = "";
+    List<AudioSource> audioSources = new List<AudioSource>();
+    int currentSoundState;
+
+    string soundStringPrefs;
+
     private void Awake()
     {
         instance = this;
-        audioSources = GetComponentsInChildren<AudioSource>();
-      
+        // audioSources = GetComponentsInChildren<AudioSource>();
+        audioSources.Add(knifeHitBoardSFX);
+        audioSources.Add(knifeHitKnifeSFX);
+        audioSources.Add(boardBreakSFX);
+        audioSources.Add(buttonSFX);
+        //   audioSources.Add();
+        
+   
+}
+
+
+    IEnumerator Start()
+    {
+        SetScreenOrientation();
+        isGooglePlayStoreVersion = false;
+        devGameName = "TapTapKnife";
+
+        gameTitle = "Tap Tap Knife";
+        paytmGamesLink = "https://paytmfirstgames.com/";
+
+        GetMainAssetBundleAndMainJsonData();
+        SetStringsFromMainJsonAndLoadPrefs();
+
+        // GetReferences();
+
+      //  AddAudioSources();
+        ButtonAddListeners();
+
+        GetCurrentSoundStateFromPrefs();
+
+        SetMaterialShaders();
+        Application.targetFrameRate = 60;
+        /*   if (isGooglePlayStoreVersion)
+           {
+               LoadLocalGameValues();
+           }*/
+        /*  if (mainJsonData != null)
+          {
+              print("paytm Version");
+              StartCoroutine(GetGameValues());
+              yield return new WaitForSeconds(1f);
+
+          }*/
+        StartGame();
+        string loadingBarAmountPrefsText = "LoadingBarFillAmount";
+        PlayerPrefs.SetFloat(devGameName + loadingBarAmountPrefsText, 1f);
+        if (gameDownloader != null)
+        {
+            gameDownloader.SetTargetLoadingBarImageAmount(1);
+        }
+
+        if (isGooglePlayStoreVersion)
+        {
+            InitializeMobileAds();
+        }
+        yield return null;
     }
 
-    private void Start()
+    void AddAudioSources()
     {
-        
-        ButtonAddListeners();
-        StartGame();
+        GameObject AudioSourceParent = new GameObject();
+        AudioSourceParent.name = "AudioSourceParent";
+        for (int count = 0; count < 10; count++)
+        {
+            GameObject audioSource = new GameObject("audioSource" + count);
+            audioSources.Add(audioSource.AddComponent<AudioSource>());
+            audioSource.transform.SetParent(AudioSourceParent.transform);
+            audioSources.Add(audioSource.GetComponent<AudioSource>());
+        }
+
     }
+
+
+
+    public void SetScreenOrientation()
+    {
+        Screen.orientation = ScreenOrientation.Portrait;
+    }
+
+
+
+    public void GetMainAssetBundleAndMainJsonData()
+    {
+        mainJsonData = null;
+        isGooglePlayStoreVersion = false;
+
+        gameDownloader = GameDownloader.instance;
+        GameObject abdObj = null;
+        if (gameDownloader == null)
+        {
+            string abdString = "GameDownloader";
+            abdObj = GameObject.Find(abdString);
+        }
+        else
+        {
+            abdObj = gameDownloader.gameObject;
+        }
+        if (abdObj != null)
+        {
+            if (abdObj.GetComponent<GameDownloader>())
+            {
+                if (gameDownloader == null)
+                {
+                    gameDownloader = abdObj.GetComponent<GameDownloader>();
+                }
+            }
+            if (gameDownloader == null)
+            {
+                Debug.Log("GameDownloader component not found");
+            }
+            else
+            {
+                mainAssetBundle = gameDownloader.GetMainAssetBundle();
+                mainJsonData = gameDownloader.GetMainJsonData();
+                if (gameDownloader.isTargetGooglePlayStore())
+                {
+                    isGooglePlayStoreVersion = true;
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("GameDownloader Gameobject not found");
+        }
+
+        if (mainAssetBundle == null)
+        {
+            string assetBundleFilePath = PlayerPrefs.GetString(devGameName + "assetBundleFilePath");
+            Debug.Log("mainAssetBundle " + assetBundleFilePath);
+            if (File.Exists(assetBundleFilePath))
+            {
+                mainAssetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
+            }
+        }
+
+        if (mainJsonData == null)
+        {
+            mainJsonDataText = PlayerPrefs.GetString(devGameName + "mainJsonDataText");
+            print("mainJsonDataText");
+            print(mainJsonDataText);
+            if (mainJsonDataText.Length > 10)
+            {
+                mainJsonData = SimpleJSON.JSON.Parse(mainJsonDataText);
+            }
+            print("mainJsonData");
+            print(mainJsonData);
+        }
+
+        scriptFilePath = PlayerPrefs.GetString(devGameName + "scriptFilePath");
+    }
+
+    public void SetStringsFromMainJsonAndLoadPrefs()
+    {
+        if (mainJsonData != null)
+        {
+            gameTitle = mainJsonData["mainData"]["gameTitle"];
+            devGameName = mainJsonData["mainData"]["devGameName"];
+        }
+
+        gameFolderName = devGameName + "Data";
+        gameValuesFileName = devGameName + "GameValues.json";
+
+
+        soundStringPrefs = devGameName + "Sounds";
+        gameValuesVersionPrefs = devGameName + "GameValuesVersion";
+    }
+
+    public void GetCurrentSoundStateFromPrefs()
+    {
+        currentSoundState = PlayerPrefs.GetInt(soundStringPrefs);
+    }
+
+    void SetMaterialShaders()
+    {
+        if (!isGooglePlayStoreVersion)
+        {
+            List<TextMeshProUGUI> allTexts = new List<TextMeshProUGUI>();
+            allTexts.Add(scoreText);
+            allTexts.Add(stageText);
+
+            Shader textShader = Shader.Find("TextMeshPro/Distance Field");
+            for (int count = 0; count < allTexts.Count; count++)
+            {
+                allTexts[count].materialForRendering.shader = textShader;
+            }
+        }
+
+    }
+
+    public void InitializeMobileAds()
+    {
+        string appId = "ca-app-pub-3940256099942544~3347511713";
+        if (mainJsonData != null)
+        {
+            if (mainJsonData["mainData"]["admobAppId"])
+            {
+                appId = mainJsonData["mainData"]["admobAppId"];
+
+            }
+        }
+        MobileAds.Initialize(appId);
+        this.rewardBasedVideo = RewardBasedVideoAd.Instance;
+        rewardBasedVideo.OnAdClosed += HandleRewardBasedVideoClosed;
+        RequestRewardBasedVideo();
+
+    }
+    RewardBasedVideoAd rewardBasedVideo;
+
+    int deathAdInterval = 3;
+    int numOfDeaths = 0;
+    private void RequestRewardBasedVideo()
+    {
+        string adUnitId = "ca-app-pub-3940256099942544/5224354917";
+        if (mainJsonData != null)
+        {
+            if (mainJsonData["mainData"]["admobAdId"])
+            {
+                adUnitId = mainJsonData["mainData"]["admobAdId"];
+            }
+            if (mainJsonData["mainData"]["deathAdInterval"])
+            {
+                deathAdInterval = mainJsonData["mainData"]["deathAdInterval"];
+            }
+        }
+        // Create an empty ad request.
+        AdRequest request = new AdRequest.Builder().Build();
+        // Load the rewarded video ad with the request.
+        this.rewardBasedVideo.LoadAd(request, adUnitId);
+    }
+
+    public void HandleRewardBasedVideoClosed(object sender, System.EventArgs args)
+    {
+        this.RequestRewardBasedVideo();
+    }
+
+    private void ShowVideoAd()
+    {
+        if (rewardBasedVideo.IsLoaded())
+        {
+            rewardBasedVideo.Show();
+        }
+    }
+    /*       private void Start()
+       {        
+           ButtonAddListeners();
+           StartGame();
+       }*/
 
     private void Update()
     {
-      
-       
-        
-        if (Input.GetMouseButtonDown(0) && canThrow && gameStarted && knivesLeft>=0)
+
+
+
+        if (Input.GetMouseButtonDown(0) && canThrow && gameStarted && knivesLeft >= 0)
         {
 
             canThrow = false;
             isAttacking = true;
-            KnifeUIUpdater();          
+            KnifeUIUpdater();
             if (knivesLeft != 0)
             {
                 StartCoroutine(Shake(boardShakeDuration, shakeMagnitude));
-                StartCoroutine(ThrowKnife(knifeObjects[knivesLeft],false));            
+                StartCoroutine(ThrowKnife(knifeObjects[knivesLeft], false));
                 knivesLeft -= 1;
                 knifeObjects[knivesLeft].SetActive(true);
                 StartCoroutine(coKnifeFadeIn(knifeObjects[knivesLeft]));
             }
             else
             {
-                StartCoroutine(ThrowKnife(knifeObjects[knivesLeft],true));
+                StartCoroutine(ThrowKnife(knifeObjects[knivesLeft], true));
             }
         }
 
-       
-    
+
+
     }
 
     #region Related to Rotation Based on Difficulty
@@ -257,19 +530,19 @@ public class TapTapKnife : MonoBehaviour
     {
         switch (easy)
         {
-            case RotationEasy.Continuous_1:               
+            case RotationEasy.Continuous_1:
                 StartCoroutine(coContinuous(rotationSpeed[0]));
                 break;
 
-            case RotationEasy.Continuous_2:               
+            case RotationEasy.Continuous_2:
                 StartCoroutine(coContinuous(rotationSpeed[1]));
                 break;
 
-            case RotationEasy.SlowInSlowOut:              
+            case RotationEasy.SlowInSlowOut:
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[2], 0, true, false));
                 break;
 
-            case RotationEasy.SlowInSlowOut_3:               
+            case RotationEasy.SlowInSlowOut_3:
                 StartCoroutine(coSlowInSlowOut(rotationSpeed[3], 3, true, false));
                 break;
 
@@ -790,7 +1063,7 @@ public class TapTapKnife : MonoBehaviour
                     break;
             }
         }
-        else if (level==2)
+        else if (level == 2)
         {
             switch (stage)
             {
@@ -805,7 +1078,7 @@ public class TapTapKnife : MonoBehaviour
                     break;
 
                 case Stages.Stage_3:
-                    difficulty = RandomSelection(Difficulty.EasyMedium,Difficulty.EasyHard);
+                    difficulty = RandomSelection(Difficulty.EasyMedium, Difficulty.EasyHard);
                     stageCount = 2;
                     break;
 
@@ -826,7 +1099,7 @@ public class TapTapKnife : MonoBehaviour
                     break;
             }
         }
-        else if (level ==3)
+        else if (level == 3)
         {
             switch (stage)
             {
@@ -836,7 +1109,7 @@ public class TapTapKnife : MonoBehaviour
                     break;
 
                 case Stages.Stage_2:
-                    difficulty = RandomSelection(Difficulty.EasyMedium, Difficulty.EasyHard); 
+                    difficulty = RandomSelection(Difficulty.EasyMedium, Difficulty.EasyHard);
                     stageCount = 1;
                     break;
 
@@ -943,25 +1216,27 @@ public class TapTapKnife : MonoBehaviour
     }
 
     void NextTurn(Stages stage)
-    {       
+    {
         currentStage = stage;
         currentDifficulty = GetCurrentDifficulty(currentStage, currentLevel);
-        int knives = GetKnivesToThrow(currentDifficulty);    
-        knivesLeft = knives-1;
+        int knives = GetKnivesToThrow(currentDifficulty);
+        // testing
+
+        knivesLeft = knives - 1;
         SpawnKnivesToThrow(knives);
         UIKnifeIndicator(knives);
         SpawnBoard();
-        if(currentStage==Stages.Bonus)
+        if (currentStage == Stages.Bonus)
         {
-           
-            foreach(Image sprite in StageDots)
+
+            foreach (Image sprite in StageDots)
             {
                 sprite.gameObject.SetActive(false);
             }
             StageDots[stageCount].gameObject.SetActive(true);
             StageDots[stageCount].sprite = ActiveBonusDots;
-            RectTransform rectTransform= StageDots[stageCount].gameObject.GetComponent<RectTransform>();
-            StartCoroutine(MoveObject(rectTransform, new Vector3(0f,-46f)));
+            RectTransform rectTransform = StageDots[stageCount].gameObject.GetComponent<RectTransform>();
+            StartCoroutine(MoveObject(rectTransform, new Vector3(0f, -46f),700f));
             stageText.text = "Bonus Stage";
             if (currentLevel != 5)
             {
@@ -973,31 +1248,37 @@ public class TapTapKnife : MonoBehaviour
             StageDots[stageCount].sprite = ActiveStageDot;
             stageText.text = "Stage " + (stageCount + 1).ToString();
         }
-       
-        
+
+
     }
 
-    IEnumerator MoveObject(RectTransform MovingObject,Vector2 desiredPos)
+    IEnumerator MoveObject(RectTransform MovingObject, Vector2 desiredPos,float speed)
     {
-        while(MovingObject.anchoredPosition != desiredPos)
+        if (MovingObject != null)
         {
-            MovingObject.anchoredPosition = Vector3.MoveTowards(MovingObject.anchoredPosition, desiredPos, 700f*Time.deltaTime);
-            yield return new WaitForSeconds(Time.deltaTime);
+            while (MovingObject.anchoredPosition != desiredPos)
+            {
+                if (MovingObject != null)
+              
+                    {
+                    MovingObject.anchoredPosition = Vector3.MoveTowards(MovingObject.anchoredPosition, desiredPos, speed * Time.deltaTime);
+                    yield return new WaitForSeconds(Time.deltaTime);
+                }
+            }
         }
-       
     }
 
     Difficulty RandomSelection(Difficulty diffOne, Difficulty diffTwo)
     {
         Difficulty difficulty;
-        int value=Random.Range(0, 2);
+        int value = Random.Range(0, 2);
         if (value == 1)
         {
             difficulty = diffOne;
         }
         else
         {
-             difficulty = diffTwo;
+            difficulty = diffTwo;
         }
         return difficulty;
 
@@ -1008,20 +1289,20 @@ public class TapTapKnife : MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            GameObject UIKnife= Instantiate(knifeUIObject,knifeUIParent.transform);
+            GameObject UIKnife = Instantiate(knifeUIObject, knifeUIParent.transform);
             UIKnife.GetComponent<RectTransform>().anchoredPosition = new Vector2(UIKnife.transform.position.x, UIKnife.transform.position.y + (i * 35));
             UIKnives.Add(UIKnife);
-            
+
         }
 
     }
 
 
     void KnifeUIUpdater()
-    {    
+    {
         Color colour = UIKnives[knivesLeft].GetComponent<Image>().color;
-        colour.a = .42f;     
-        UIKnives[knivesLeft].GetComponent<Image>().color= colour;
+        colour.a = .42f;
+        UIKnives[knivesLeft].GetComponent<Image>().color = colour;
     }
 
 
@@ -1058,7 +1339,7 @@ public class TapTapKnife : MonoBehaviour
     {
         buttonSFX.Play();
         tutorialPanel.SetActive(true);
-      
+
     }
 
     void VolumeButtonClicked()
@@ -1068,7 +1349,7 @@ public class TapTapKnife : MonoBehaviour
         {
             volume = false;
             volumeImage.sprite = VolumeOFF;
-            for(int i=0;i<audioSources.Length;i++)
+            for (int i = 0; i < audioSources.Count; i++)
             {
                 audioSources[i].mute = true;
             }
@@ -1077,12 +1358,14 @@ public class TapTapKnife : MonoBehaviour
         {
             volume = true;
             volumeImage.sprite = VolumeOn;
-            for (int i = 0; i < audioSources.Length; i++)
+            for (int i = 0; i < audioSources.Count; i++)
             {
                 audioSources[i].mute = false;
             }
         }
     }
+
+
 
 
 
@@ -1104,7 +1387,7 @@ public class TapTapKnife : MonoBehaviour
         buttonSFX.Play();
         isGameOver = false;
         gameStarted = true;
-        canThrow = true;      
+        canThrow = true;
         StartGame();
         gameOverPanel.SetActive(false);
     }
@@ -1233,7 +1516,8 @@ public class TapTapKnife : MonoBehaviour
                 break;
 
             case Difficulty.Bonus:
-                randomValue = (int)Random.Range(numOfKnives[6].x, numOfKnives[6].y);
+                // randomValue = (int)Random.Range(numOfKnives[6].x, numOfKnives[6].y);
+                randomValue = 12;//number of jellys in bonus stage
                 return randomValue;
                 break;
 
@@ -1241,13 +1525,13 @@ public class TapTapKnife : MonoBehaviour
                 return -1;
                 break;
         }
-       
+
         return -1;
     }
 
     void SpawnKnivesToThrow(int numOfKnives)
     {
-   //     knivesToThrowText.text = "Knives to Throw: " + numOfKnives.ToString();
+        //     knivesToThrowText.text = "Knives to Throw: " + numOfKnives.ToString();
         knifeObjects = new List<GameObject>(numOfKnives);
         knives = new List<GameObject>(numOfKnives);
         if (knifeParent == null)
@@ -1264,8 +1548,8 @@ public class TapTapKnife : MonoBehaviour
 
         for (int i = 0; i < knifeObjects.Count; i++)
         {
-           
-            if(i == knifeObjects.Count-1)
+
+            if (i == knifeObjects.Count - 1)
             {
                 StartCoroutine(coKnifeFadeIn(knifeObjects[i]));
             }
@@ -1292,7 +1576,7 @@ public class TapTapKnife : MonoBehaviour
         }
     }
 
-    
+
     IEnumerator ThrowKnife(GameObject currentKnife, bool lastKnife)
     {
         while (currentKnife.transform.position != knifeThrownPos)
@@ -1312,39 +1596,44 @@ public class TapTapKnife : MonoBehaviour
 
     void BoardBreakDelay()
     {
-        for (int i = 0; i < knives.Count; i++)
+        if (!isGameOver)
         {
-            knives[i].transform.parent = null;          
-        }
-        GameObject temp = currentBoard;
-        currentBoard = null;
-      
-     
-        for (int i = 0; i < knives.Count; i++)
-        {
-          
-            knives[i].GetComponent<KnifeForce>().enabled = true;
-            Destroy(knives[i], 1f);
-            boardBreakSFX.Play(1);
-        }
+            for (int i = 0; i < knives.Count; i++)
+            {
+                knives[i].transform.parent = null;
+            }
+            GameObject temp = currentBoard;
+            currentBoard = null;
 
-        for (int i = 0; i < UIKnives.Count; i++)
-        {
-            Destroy(UIKnives[i]);
-        }
-        knivesLeft = 0;
-        UIKnives.Clear();
-        GameObject tempBoard;
-       if (currentDifficulty==Difficulty.Bonus)
-        {
-             tempBoard = Instantiate(bonusBrokenBoards[brokenboardIndex], new Vector3(-1.15f,1f, 0f), Quaternion.identity);
-        }
-        else
-        {
-             tempBoard = Instantiate(brokenBoards[brokenboardIndex], new Vector3(-1.15f, 1f, 0f), Quaternion.identity);
-        }
-        StartCoroutine(coDestroyBoard(temp));
 
+            for (int i = 0; i < knives.Count; i++)
+            {
+
+                knives[i].GetComponent<KnifeForce>().enabled = true;
+                Destroy(knives[i], 1f);
+                boardBreakSFX.Play();
+            }
+
+            for (int i = 0; i < UIKnives.Count; i++)
+            {
+                Destroy(UIKnives[i]);
+            }
+            knivesLeft = 0;
+            UIKnives.Clear();
+            GameObject tempBoard;
+            if (currentDifficulty == Difficulty.Bonus)
+            {
+                tempBoard = Instantiate(bonusBrokenBoards[brokenboardIndex], new Vector3(-1.15f, 1f, 0f), Quaternion.identity);
+            }
+            else
+            {
+                tempBoard = Instantiate(brokenBoards[brokenboardIndex], new Vector3(-1.15f, 1f, 0f), Quaternion.identity);
+            }
+            StartCoroutine(coDestroyBoard(temp));
+
+
+
+        }
 
     }
 
@@ -1355,9 +1644,9 @@ public class TapTapKnife : MonoBehaviour
             yield return new WaitForSeconds(.1f);
             Vector3 orignalPosition = currentBoard.transform.position;
             float elapsed = 0f;
-            Color color = currentBoardSprite.color;
-            color.a = .95f;
-            currentBoardSprite.color = color;
+           // Color color = currentBoardSprite.color;
+          //  color.a = .95f;
+         //   currentBoardSprite.color = color;
             while (elapsed < duration)
             {
                 float x = 0f;
@@ -1377,8 +1666,8 @@ public class TapTapKnife : MonoBehaviour
             {
 
                 currentBoard.transform.position = orignalPosition;
-                color.a = 1f;
-                currentBoardSprite.color = color;
+              //  color.a = 1f;
+              //  currentBoardSprite.color = color;
             }
         }
     }
@@ -1390,7 +1679,7 @@ public class TapTapKnife : MonoBehaviour
         yield return new WaitForSeconds(1f);
         Destroy(clone);
         currentStage++;
-        if(currentStage==Stages.Max)
+        if (currentStage == Stages.Max)
         {
             currentStage = Stages.Stage_1;
             StageDotsUI();
@@ -1407,7 +1696,7 @@ public class TapTapKnife : MonoBehaviour
     public void GameOverDelay()
     {
         StartCoroutine(GameOver());
-      
+
     }
 
 
@@ -1417,6 +1706,7 @@ public class TapTapKnife : MonoBehaviour
         StopAllCoroutines();
         gameStarted = false;
         gameOverPanel.SetActive(true);
+        Camera.main.transform.position = new Vector3(0f, 0f, -10f);
         Destroy(currentBoard);
         for (int i = 0; i < knifeObjects.Count; i++)
         {
@@ -1437,7 +1727,7 @@ public class TapTapKnife : MonoBehaviour
 
     private void StageDotsUI()
     {
-       
+
         for (int j = 0; j < StageDots.Length; j++)
         {
             StageDots[j].gameObject.SetActive(true);
@@ -1477,13 +1767,13 @@ public class TapTapKnife : MonoBehaviour
     public void redPanelEnabler()
     {
         StartCoroutine(RedPanelEnabler());
-    
+
     }
 
 
     IEnumerator RedPanelEnabler()
     {
-      
+
         knifeHitBoardSFX.Stop();
         knifeHitKnifeSFX.Play();
         redPanel.SetActive(true);
@@ -1494,7 +1784,35 @@ public class TapTapKnife : MonoBehaviour
 
     }
 
-  
-    #endregion
+    public void UIEnabler(Vector2 vector2)
+    {
+        StartCoroutine(plusFiftyEnabler(vector2));
+    }
 
+        IEnumerator plusFiftyEnabler(Vector2 Pos)
+    {
+        GameObject plusFiftyClone = Instantiate(plusFifty,canvas.transform);
+        Destroy(plusFiftyClone, .65f);
+        TextMeshProUGUI plusFiftyTextClone = plusFiftyClone.GetComponent<TextMeshProUGUI>();
+        plusFiftyClone.SetActive(true);
+         RectTransform newRect= plusFiftyClone.GetComponent<RectTransform>();
+        newRect.anchoredPosition = Pos;
+        while (plusFiftyTextClone.fontSize < 60)
+
+        {
+            plusFiftyTextClone.fontSize += 5;
+            yield return null;
+        }
+        yield return new WaitForSeconds(.025f);
+        StartCoroutine(MoveObject(newRect, testPOs, 2500f));
+       // yield return new WaitForSeconds(.5f);
+     //   Destroy(plusFiftyTextClone, .3f);
+      //  plusFifty.SetActive(false);
+        //  plusFiftyText.fontSize = 55;
+        //  yield return new WaitForEndOfFrame();
+        //  plusFiftyText.fontSize = 60
+
+
+    }
+    #endregion
 }

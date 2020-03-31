@@ -217,10 +217,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3500335080832483794, guid: 0a373cdf04dbdc14fae26f768bf78f0c,
         type: 3}
-      propertyPath: GamePrefab
-      value: 
-      objectReference: {fileID: 965209709806889310, guid: de4994ff3ece0cf49a924da86d2fe2cc,
-        type: 3}
+      propertyPath: showDebug
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3500335080832483795, guid: 0a373cdf04dbdc14fae26f768bf78f0c,
         type: 3}
       propertyPath: m_LocalPosition.x

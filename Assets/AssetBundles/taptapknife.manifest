@@ -1,0 +1,192 @@
+ManifestFileVersion: 0
+CRC: 4065144820
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: fdb7ef75c11b981cd3c5a4579dd35263
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 6bf4ecfd6896d6751de1f964ce13ea13
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 50
+  Script: {instanceID: 0}
+- Class: 58
+  Script: {instanceID: 0}
+- Class: 61
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 82
+  Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1720e0e0aefc85c4c92d14c6bba4756e, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 451416755dda84b4fbf577cad6264335, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 17193046e2fe08e498d4343bee42e25f, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d7aa12da70b28364c9bcf767d01f9c12, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 223
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+Assets:
+- Assets/TapTapKnife/Art/UI/home.png
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/V202.prefab
+- Assets/TapTapKnife/VFX/Resources/Material/Wood_AB_mat 1.mat
+- Assets/TapTapKnife/Art/Gameplay/Boards_/v2_03.png
+- Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/01.png
+- Assets/TapTapKnife/Art/UI/dot 01.png
+- Assets/TapTapKnife/Prefabs/Gameplay/Hard_Board_3.prefab
+- Assets/TapTapKnife/Art/UI/No sound.png
+- Assets/TapTapKnife/Prefabs/Gameplay/Medium_Board_7.prefab
+- Assets/TapTapKnife/Art/UI/play.png
+- Assets/TapTapKnife/VFX/Resources/Texture/circle 1.png
+- Assets/TapTapKnife/Prefabs/Gameplay/Easy_Board_1.prefab
+- Assets/TapTapKnife/Prefabs/Gameplay/Medium_Board_3.prefab
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/Burger.prefab
+- Assets/TapTapKnife/Art/Gameplay/Sounds/Knife hitting board.ogg
+- Assets/TapTapKnife/Art/Gameplay/Boards_/v2_07.png
+- Assets/TapTapKnife/VFX/Resources/Texture/triangle_soft 1.png
+- Assets/TapTapKnife/Prefabs/Gameplay/Hard_Board_2.prefab
+- Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/02.png
+- Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/09.png
+- Assets/TapTapKnife/Art/Gameplay/Boards_/v2_04.png
+- Assets/TapTapKnife/VFX/Resources/Texture/Wood_txt-Exp.png
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/Doughnut.prefab
+- Assets/TapTapKnife/Prefabs/Knife.prefab
+- Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/10.png
+- Assets/TapTapKnife/Art/UI/titil.png
+- Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/burgerBroken.png
+- Assets/TapTapKnife/Prefabs/Gameplay/Easy_Board_3.prefab
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/V210.prefab
+- Assets/TapTapKnife/VFX/Prefab/VFX_WoodenBoard Explosion V2.prefab
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/V206.prefab
+- Assets/TapTapKnife/Prefabs/Knife.controller
+- Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/pizzaBroken.png
+- Assets/TapTapKnife/VFX/Resources/Material/Khit_AB_mat.mat
+- Assets/TapTapKnife/Prefabs/Gameplay/Bonus_Board_4.prefab
+- Assets/TapTapKnife/Prefabs/Gameplay/Medium_Board_2.prefab
+- Assets/TapTapKnife/Prefabs/MainCanvas.prefab
+- Assets/TapTapKnife/Art/Gameplay/Boards_/v2_09.png
+- Assets/TapTapKnife/Prefabs/Gameplay/Easy_Board_2.prefab
+- Assets/TapTapKnife/Prefabs/Gameplay/Hard_Board_4.prefab
+- Assets/TapTapKnife/VFX/Prefab/VFX_JellyBlast.prefab
+- Assets/TapTapKnife/VFX/Resources/Texture/Glow_txt.tga
+- Assets/TapTapKnife/Art/Gameplay/Sounds/wooden board break .ogg
+- Assets/TapTapKnife/Art/UI/dot.png
+- Assets/TapTapKnife/Prefabs/Plus50.prefab
+- Assets/TapTapKnife/Prefabs/Gameplay/Medium_Board_1.prefab
+- Assets/TapTapKnife/Art/UI/No.of knives (1).png
+- Assets/TapTapKnife/VFX/Resources/Texture/glow 1.png
+- Assets/TapTapKnife/Prefabs/Gameplay/Bonus_Board_3.prefab
+- Assets/TapTapKnife/Art/UI/info.png
+- Assets/TapTapKnife/Prefabs/Gameplay/Medium_Board_5.prefab
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/PIzza.prefab
+- Assets/TapTapKnife/Prefabs/Gameplay/Hard_Board_1.prefab
+- Assets/TapTapKnife/Prefabs/Gameplay/Bonus_Board_2.prefab
+- Assets/TapTapKnife/VFX/Resources/Material/Hit_AB_mat.mat
+- Assets/TapTapKnife/VFX/Resources/Texture/particle/set01/04.png
+- Assets/TapTapKnife/Art/UI/restart.png
+- Assets/TapTapKnife/Prefabs/Gameplay/Hard_Board_5.prefab
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/V201.prefab
+- Assets/TapTapKnife/VFX/Resources/Texture/Ray_txt.tga
+- Assets/TapTapKnife/VFX/Resources/Material/Glow_add_mat.mat
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/V204.prefab
+- Assets/TapTapKnife/Art/Gameplay/Boards_/burger.png
+- Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/DoughnutBroken.png
+- Assets/TapTapKnife/Art/Gameplay/Boards_/v2_01.png
+- Assets/TapTapKnife/Prefabs/Gameplay/Easy_Board_5.prefab
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/V207.prefab
+- Assets/TapTapKnife/Art/Gameplay/Boards_/Doughnut.png
+- Assets/TapTapKnife/Prefabs/Knifefall.anim
+- Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/06.png
+- Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/08.png
+- Assets/TapTapKnife/Art/UI/sound.png
+- Assets/TapTapKnife/VFX/Resources/Material/Ring_AB_mat.mat
+- Assets/TapTapKnife/Prefabs/Gameplay/Medium_Board_4.prefab
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/V203.prefab
+- Assets/TapTapKnife/VFX/Resources/Material/glow 1.mat
+- Assets/TapTapKnife/VFX/Resources/Material/Wood_AB_mat.mat
+- Assets/TapTapKnife/Prefabs/Gameplay/Bonus_Board_5.prefab
+- Assets/TapTapKnife/Prefabs/KnifeUI.prefab
+- Assets/TapTapKnife/Art/Gameplay/Boards_/v2_05.png
+- Assets/TapTapKnife/Art/Gameplay/Boards_/v2_10.png
+- Assets/TapTapKnife/Art/UI/end game titil.png
+- Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/07.png
+- Assets/TapTapKnife/VFX/Resources/Texture/Hit_txt.tga
+- Assets/TapTapKnife/VFX/Prefab/VFX_OnKnifeHit.prefab
+- Assets/TapTapKnife/Prefabs/Gameplay/Easy_Board_4.prefab
+- Assets/TapTapKnife/VFX/Resources/Material/Ray_AB_mat.mat
+- Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/05.png
+- Assets/TapTapKnife/Prefabs/Gameplay/Medium_Board_6.prefab
+- Assets/TapTapKnife/Art/Gameplay/Boards_/v2_08.png
+- Assets/TapTapKnife/Art/UI/BG.png
+- Assets/TapTapKnife/Art/Gameplay/Boards_/v2_02.png
+- Assets/TapTapKnife/Art/Gameplay/Boards_/v2_06.png
+- Assets/TapTapKnife/Art/UI/dot fill.png
+- Assets/TapTapKnife/VFX/Resources/Material/Wood_AB_mat 2.mat
+- Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/03.png
+- Assets/TapTapKnife/Art/UI/dots 0.png
+- Assets/TapTapKnife/VFX/Resources/Material/circle 1.mat
+- Assets/TapTapKnife/Art/Gameplay/Sounds/Collectable.ogg
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/V208.prefab
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/V205.prefab
+- Assets/TapTapKnife/VFX/Resources/Material/triangle_soft 1.mat
+- Assets/TapTapKnife/Art/Gameplay/Sounds/Button sound_Tap Tap Knife.wav
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/V209.prefab
+- Assets/TapTapKnife/Art/Gameplay/Boards_/pizza.png
+- Assets/TapTapKnife/VFX/Resources/Texture/Ring_txt.tga
+- Assets/TapTapKnife/Art/UI/Tutorial Sprites/Tap Tap Knife tutorial 02a.jpg
+- Assets/TapTapKnife/VFX/Prefab/VFX_KnifeHit.prefab
+- Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/04.png
+- Assets/TapTapKnife/VFX/Resources/Texture/particle/set01/01.png
+- Assets/TapTapKnife/Prefabs/TapTapKnifeGame.prefab
+Dependencies: []

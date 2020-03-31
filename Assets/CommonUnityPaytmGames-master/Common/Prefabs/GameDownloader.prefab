@@ -43,11 +43,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05c07acf19e4d0b47b4708dcd0c6a4ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forceLoadNewScriptAssetBundle: 0
   showDebug: 0
   storePlatform: 0
-  devGameName: 
-  gameMainAssetUrl: 
-  GamePrefab: {fileID: 0}
+  devGameName: TapTapKnife
+  gameMainAssetUrl: http://drive.google.com/uc?export=download&id=1T-FOel9cPYYCpbImHu8LE1zSILOt69X1
+  GamePrefab: {fileID: 965209709806889310, guid: de4994ff3ece0cf49a924da86d2fe2cc,
+    type: 3}
   useLocalGamePrefab: 0
   LoadingCanvasPrefab: {fileID: 3467854081077829739, guid: 74ff8ef9fb01e774b8354a73879c6682,
     type: 3}
