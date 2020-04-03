@@ -90,7 +90,7 @@ GameObject:
   m_Component:
   - component: {fileID: 965209709806889309}
   m_Layer: 0
-  m_Name: TapTapKnife
+  m_Name: TapTapKnifeGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -227,6 +227,11 @@ PrefabInstance:
     - target: {fileID: 2277663039656355314, guid: dc576e9493aaffc40892c79efa7beb24,
         type: 3}
       propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277663039656355315, guid: dc576e9493aaffc40892c79efa7beb24,
+        type: 3}
+      propertyPath: isGooglePlayStoreVersion
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

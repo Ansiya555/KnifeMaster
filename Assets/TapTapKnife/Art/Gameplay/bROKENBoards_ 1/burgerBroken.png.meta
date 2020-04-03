@@ -14,6 +14,18 @@ TextureImporter:
   - first:
       213: 8067490680929222895
     second: burger_3
+  - first:
+      213: -2027364160728839199
+    second: burgerBroken_0
+  - first:
+      213: 878302514789654406
+    second: burgerBroken_1
+  - first:
+      213: 1260476367127438668
+    second: burgerBroken_2
+  - first:
+      213: -1198502738414171530
+    second: burgerBroken_3
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -110,85 +122,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: burger_0
+      name: burgerBroken_0
       rect:
         serializedVersion: 2
         x: 0
         y: 311.5
         width: 331
         height: 311.5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 225275392788cb74082da480d97c2500
-      internalID: 6234330970754847308
+      spriteID: 8411edae61defd94ea6633b0d67451fc
+      internalID: -2027364160728839199
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: burger_1
+      name: burgerBroken_1
       rect:
         serializedVersion: 2
         x: 331
         y: 311.5
         width: 331
         height: 311.5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4c9988d931b14694db3843396203171f
-      internalID: 9215782535512369726
+      spriteID: b35ba13168a30e94789b99b427bb2e10
+      internalID: 878302514789654406
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: burger_2
+      name: burgerBroken_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0.5
         width: 331
         height: 311.5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bef493a8026795f4697fb8b582ff55d1
-      internalID: -7554200434601859089
+      spriteID: 7179bc7654b5db744b31a0f269fe1623
+      internalID: 1260476367127438668
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: burger_3
+      name: burgerBroken_3
       rect:
         serializedVersion: 2
         x: 331
         y: 0.5
         width: 331
         height: 311.5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 680dc0c5b0e65bb4c9429124393680d3
-      internalID: 8067490680929222895
+      spriteID: c1302a62f5f0f6349b37ffdc8318f596
+      internalID: -1198502738414171530
       vertices: []
       indices: 
       edges: []

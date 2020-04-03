@@ -14,6 +14,18 @@ TextureImporter:
   - first:
       213: 8262169487354687961
     second: Doughnut_3
+  - first:
+      213: 1642346277229209629
+    second: DoughnutBroken_0
+  - first:
+      213: 3352161700885197704
+    second: DoughnutBroken_1
+  - first:
+      213: 4319137851679822824
+    second: DoughnutBroken_2
+  - first:
+      213: -2834797591977962073
+    second: DoughnutBroken_3
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -110,85 +122,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Doughnut_0
+      name: DoughnutBroken_0
       rect:
         serializedVersion: 2
         x: 0
         y: 292
         width: 292
         height: 292
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 703ca4faa66a8384e8612fb69adc8156
-      internalID: -8576997681220381384
+      spriteID: 8762a3d051f57f84ca9e6eb7cd2acd69
+      internalID: 1642346277229209629
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Doughnut_1
+      name: DoughnutBroken_1
       rect:
         serializedVersion: 2
         x: 292
         y: 292
         width: 292
         height: 292
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a42d314fd8357c24a8d69a7c93a5340e
-      internalID: 8466508113533366575
+      spriteID: e4bebd0eb48c15a4ebd6dac412751596
+      internalID: 3352161700885197704
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Doughnut_2
+      name: DoughnutBroken_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 292
         height: 292
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1bc7e738584de234581122df0cf6c7fe
-      internalID: -1213567505229813480
+      spriteID: 894e193f3aeccfb4e8abcbc795769dde
+      internalID: 4319137851679822824
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Doughnut_3
+      name: DoughnutBroken_3
       rect:
         serializedVersion: 2
         x: 292
         y: 0
         width: 292
         height: 292
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bada5d3e269b72949a198c9bd6101842
-      internalID: 8262169487354687961
+      spriteID: 4126c3ded8cea314eb4bce0a888fc0df
+      internalID: -2834797591977962073
       vertices: []
       indices: 
       edges: []

@@ -1125,7 +1125,7 @@ MonoBehaviour:
   scoreText: {fileID: 2277663040594942823}
   plusFiftyText: {fileID: 1963514282985058875, guid: ee6c43f50cfa5db4f8f41bbb42c4f362,
     type: 3}
-  testPOs: {x: 0, y: 489}
+  plusFiftyFinalPos: {x: 0, y: 450}
   boardSkins:
   - {fileID: 21300000, guid: b2eb3eb9f87d6054bbf5b383066317cb, type: 3}
   - {fileID: 21300000, guid: f9a9b4bd0356d8c44829fc6703d1ca3a, type: 3}
@@ -1341,7 +1341,9 @@ MonoBehaviour:
     type: 3}
   isGooglePlayStoreVersion: 0
   mainAssetBundle: {fileID: 0}
-  localJsonGameValuesText: {fileID: 0}
+  localJsonGameValuesText: {fileID: 4900000, guid: 74ce66d5199232445b55818a71046505,
+    type: 3}
+  BgRenderer: {fileID: 0}
 --- !u!1 &2277663039786485468
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1678944213
+CRC: 1876401114
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 2205f354a3dd9cd6c45172d5d3949cda
+    Hash: a4c432edf3d57dc838d2f9bd156e4278
   TypeTreeHash:
     serializedVersion: 2
     Hash: d18cc6c776bcfdf2cae82ee95d9f7a19
@@ -129,7 +129,7 @@ Assets:
 - Assets/TapTapKnife/Prefabs/Gameplay/Bonus_Board_3.prefab
 - Assets/TapTapKnife/Art/UI/info.png
 - Assets/TapTapKnife/Prefabs/Gameplay/Medium_Board_5.prefab
-- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/PIzza.prefab
+- Assets/TapTapKnife/Prefabs/BreakableBoardPrefabs/Pizza.prefab
 - Assets/TapTapKnife/Prefabs/Gameplay/Hard_Board_1.prefab
 - Assets/TapTapKnife/Prefabs/Gameplay/Bonus_Board_2.prefab
 - Assets/TapTapKnife/VFX/Resources/Material/Hit_AB_mat.mat

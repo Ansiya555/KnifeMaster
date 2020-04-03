@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 using Strobotnik.GUA;
 using GoogleMobileAds.Api;
 using System.IO;
@@ -14,7 +15,7 @@ public class TapTapKnife : MonoBehaviour
     [SerializeField] TextMeshProUGUI stageText;
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] TextMeshProUGUI plusFiftyText;
-    [SerializeField] Vector2 testPOs;
+    [SerializeField] Vector2 plusFiftyFinalPos;
    
 
     [Header("Gameplay Variables")]
@@ -175,6 +176,22 @@ public class TapTapKnife : MonoBehaviour
    
     Vector3 camerPos=new Vector3(-.23f,0f,-10f);
     [SerializeField] SpriteRenderer BgRenderer;
+    SimpleJSON.JSONNode gameValuesJsonData;
+    [SerializeField] Material circleMat;
+    [SerializeField] Material glowOneMat;
+    [SerializeField] Material glowMat;
+    [SerializeField] Material hitABMat;
+    [SerializeField] Material kHitABMat;
+    [SerializeField] Material rayABMat;
+    [SerializeField] Material ringABMat;
+    [SerializeField] Material triangleSoftOne;
+    [SerializeField] Material woodABMat;
+    [SerializeField] Material woodABMatOne;
+    [SerializeField] Material woodABMatTwo;
+    
+    
+
+
 
     private void Awake()
     {
@@ -184,6 +201,7 @@ public class TapTapKnife : MonoBehaviour
         audioSources.Add(knifeHitKnifeSFX);
         audioSources.Add(boardBreakSFX);
         audioSources.Add(buttonSFX);
+        audioSources.Add(collectibleSFX);
         //   audioSources.Add();
         
    
@@ -201,6 +219,8 @@ public class TapTapKnife : MonoBehaviour
 
         GetMainAssetBundleAndMainJsonData();
         SetStringsFromMainJsonAndLoadPrefs();
+        StartCoroutine(GameValuesJsonLoader());
+        LoadValuesFromJSON();
 
          GetReferences();
 
@@ -282,102 +302,169 @@ public class TapTapKnife : MonoBehaviour
             }
 
 
-            boardSkins[0]=mainAssetBundle.LoadAsset<Sprite>("v2_01");
-            boardSkins[1]=mainAssetBundle.LoadAsset<Sprite>("v2_02");
-            boardSkins[2]=mainAssetBundle.LoadAsset<Sprite>("v2_03");
-            boardSkins[3]=mainAssetBundle.LoadAsset<Sprite>("v2_04");
-            boardSkins[4]=mainAssetBundle.LoadAsset<Sprite>("v2_05");
-            boardSkins[5]=mainAssetBundle.LoadAsset<Sprite>("v2_06");
-            boardSkins[6]=mainAssetBundle.LoadAsset<Sprite>("v2_07");
-            boardSkins[7]=mainAssetBundle.LoadAsset<Sprite>("v2_08");
-            boardSkins[8]=mainAssetBundle.LoadAsset<Sprite>("v2_09");
-            boardSkins[9]=mainAssetBundle.LoadAsset<Sprite>("v2_10");
-           
+            #region related to prefab and art assets loading from assetbundle
+
+
+            boardSkins[0] = mainAssetBundle.LoadAsset<Sprite>("v2_01");
+            boardSkins[1] = mainAssetBundle.LoadAsset<Sprite>("v2_02");
+            boardSkins[2] = mainAssetBundle.LoadAsset<Sprite>("v2_03");
+            boardSkins[3] = mainAssetBundle.LoadAsset<Sprite>("v2_04");
+            boardSkins[4] = mainAssetBundle.LoadAsset<Sprite>("v2_05");
+            boardSkins[5] = mainAssetBundle.LoadAsset<Sprite>("v2_06");
+            boardSkins[6] = mainAssetBundle.LoadAsset<Sprite>("v2_07");
+            boardSkins[7] = mainAssetBundle.LoadAsset<Sprite>("v2_08");
+            boardSkins[8] = mainAssetBundle.LoadAsset<Sprite>("v2_09");
+            boardSkins[9] = mainAssetBundle.LoadAsset<Sprite>("v2_10");
+
             bonusBoardSkins[0] = mainAssetBundle.LoadAsset<Sprite>("burger");
             bonusBoardSkins[1] = mainAssetBundle.LoadAsset<Sprite>("Doughnut");
             bonusBoardSkins[2] = mainAssetBundle.LoadAsset<Sprite>("pizza");
 
-            brokenBoards[0] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
-            brokenBoards[1] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
-            brokenBoards[2] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
-            brokenBoards[3] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
-            brokenBoards[4] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
-            brokenBoards[5] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
-            brokenBoards[6] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
-            brokenBoards[7] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
-            brokenBoards[8] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
-            brokenBoards[9] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
-            brokenBoards[10] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
+            brokenBoards[0] = mainAssetBundle.LoadAsset<GameObject>("V201");
+            brokenBoards[1] = mainAssetBundle.LoadAsset<GameObject>("V202");
+            brokenBoards[2] = mainAssetBundle.LoadAsset<GameObject>("V203");
+            brokenBoards[3] = mainAssetBundle.LoadAsset<GameObject>("V204");
+            brokenBoards[4] = mainAssetBundle.LoadAsset<GameObject>("V205");
+            brokenBoards[5] = mainAssetBundle.LoadAsset<GameObject>("V206");
+            brokenBoards[6] = mainAssetBundle.LoadAsset<GameObject>("V207");
+            brokenBoards[7] = mainAssetBundle.LoadAsset<GameObject>("V208");
+            brokenBoards[8] = mainAssetBundle.LoadAsset<GameObject>("V209");
+            brokenBoards[9] = mainAssetBundle.LoadAsset<GameObject>("V210");
+            // brokenBoards[10] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
 
             bonusBrokenBoards[0] = mainAssetBundle.LoadAsset<GameObject>("burger");
             bonusBrokenBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Doughnut");
             bonusBrokenBoards[2] = mainAssetBundle.LoadAsset<GameObject>("pizza");
 
+            knifePrefab = mainAssetBundle.LoadAsset<GameObject>("Knife");
+
+            easyBoards[0] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_1");
+            easyBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_2");
+            easyBoards[2] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_3");
+            easyBoards[3] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_4");
+            easyBoards[4] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_5");
+
+            easyMediumBoards[0] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_1");
+            easyMediumBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_2");
+            easyMediumBoards[2] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_3");
+            easyMediumBoards[3] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_4");
+            easyMediumBoards[4] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_5");
+            easyMediumBoards[5] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_1");
+            easyMediumBoards[6] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_2");
+            easyMediumBoards[7] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_3");
+            easyMediumBoards[8] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_4");
+            easyMediumBoards[9] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_5");
+            easyMediumBoards[10] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_6");
+            easyMediumBoards[11] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_7");
+
+            mediumBoards[0] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_1");
+            mediumBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_2");
+            mediumBoards[2] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_3");
+            mediumBoards[3] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_4");
+            mediumBoards[4] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_5");
+            mediumBoards[5] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_6");
+            mediumBoards[6] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_7");
+
+            mediumHardBoards[0] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_1");
+            mediumHardBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_2");
+            mediumHardBoards[2] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_3");
+            mediumHardBoards[3] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_4");
+            mediumHardBoards[4] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_5");
+            mediumHardBoards[5] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_1");
+            mediumHardBoards[6] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_2");
+            mediumHardBoards[7] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_3");
+            mediumHardBoards[8] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_4");
+            mediumHardBoards[9] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_5");
+            mediumHardBoards[10] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_6");
+            mediumHardBoards[11] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_7");
 
 
-
-            /* blockSlots.Clear();
-             BlockVariants.Clear();
-             ColourSprites.Clear();
-             blockSlots.Add(BlockSnatchPrefab.transform.GetChild(3).GetChild(0).gameObject);
-             blockSlots.Add(BlockSnatchPrefab.transform.GetChild(3).GetChild(1).gameObject);
-             blockSlots.Add(BlockSnatchPrefab.transform.GetChild(3).GetChild(2).gameObject);
-             slotPrefab = mainAssetBundle.LoadAsset<GameObject>("BaseTile");
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent1"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent2"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent3"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent4"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent5"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent6"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent7"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent8"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent9"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent10"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent11"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent12"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent13"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent14"));
-             BlockVariants.Add(mainAssetBundle.LoadAsset<GameObject>("BlockVariantParent15"));
-             gameOverPanel = BlockSnatchPrefab.transform.GetChild(2).GetChild(2).gameObject;
-             ColourSprites.Add(mainAssetBundle.LoadAsset<Sprite>("blue"));
-             ColourSprites.Add(mainAssetBundle.LoadAsset<Sprite>("green"));
-             ColourSprites.Add(mainAssetBundle.LoadAsset<Sprite>("purple"));
-             ColourSprites.Add(mainAssetBundle.LoadAsset<Sprite>("red"));
-             ColourSprites.Add(mainAssetBundle.LoadAsset<Sprite>("yellow"));
-             soundOn = mainAssetBundle.LoadAsset<Sprite>("sound on");
-             soundOff = mainAssetBundle.LoadAsset<Sprite>("sound off");
-             // Sprite TutorialImage1=
+            hardBoards[0] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_1");
+            hardBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_2");
+            hardBoards[2] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_3");
+            hardBoards[3] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_4");
+            hardBoards[4] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_5");
 
 
+            easyHardBoards[0] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_1");
+            easyHardBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_2");
+            easyHardBoards[2] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_3");
+            easyHardBoards[3] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_4");
+            easyHardBoards[4] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_5");
+            easyHardBoards[5] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_1");
+            easyHardBoards[6] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_2");
+            easyHardBoards[7] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_3");
+            easyHardBoards[8] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_4");
+            easyHardBoards[9] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_5");
+
+            bonusBoard = mainAssetBundle.LoadAsset<GameObject>("Bonus_Board_5");
+
+            plusFifty = mainAssetBundle.LoadAsset<GameObject>("Plus50");
+            plusFiftyText = plusFifty.GetComponent<TextMeshProUGUI>();
+
+            ActiveStageDot = mainAssetBundle.LoadAsset<Sprite>("dot fill");
+            InActiveStageDots = mainAssetBundle.LoadAsset<Sprite>("dot");
+            ActiveBonusDots = mainAssetBundle.LoadAsset<Sprite>("dot 01");
+            InActiveBonusDots = mainAssetBundle.LoadAsset<Sprite>("dots 0");
+            VolumeOFF = mainAssetBundle.LoadAsset<Sprite>("No sound");
+            VolumeOn = mainAssetBundle.LoadAsset<Sprite>("sound");
+           /* collectibleVFX = mainAssetBundle.LoadAsset<GameObject>("VFX_JellyBlast");
+            knifeHitKnifeVfx = mainAssetBundle.LoadAsset<GameObject>("VFX_OnKnifeHit");
+            boardHitVFX = mainAssetBundle.LoadAsset<GameObject>("VFX_KnifeHit");
+            boardDestroyVFX = mainAssetBundle.LoadAsset<GameObject>("VFX_WoodenBoard Explosion V2");
+            knifeUIObject = mainAssetBundle.LoadAsset<GameObject>("KnifeUI");
+            circleMat = mainAssetBundle.LoadAsset<Material>("circle 1"); 
+            glowOneMat = mainAssetBundle.LoadAsset<Material>("glow 1");
+            glowMat = mainAssetBundle.LoadAsset<Material>("Glow_add_mat");
+            hitABMat = mainAssetBundle.LoadAsset<Material>("Glow_add_mat");
+            kHitABMat = mainAssetBundle.LoadAsset<Material>("Khit_AB_mat");
+            rayABMat = mainAssetBundle.LoadAsset<Material>("Ray_AB_mat");
+            ringABMat = mainAssetBundle.LoadAsset<Material>("Ring_AB_mat");
+             triangleSoftOne = mainAssetBundle.LoadAsset<Material>("triangle_soft 1");
+             woodABMat = mainAssetBundle.LoadAsset<Material>("Wood_AB_mat");
+             woodABMatOne = mainAssetBundle.LoadAsset<Material>("Wood_AB_mat 1");
+             woodABMatTwo = mainAssetBundle.LoadAsset<Material>("Wood_AB_mat 2");
+
+            */
+            #endregion
+
+            #region Related to Child gameobjects
+            if (!isGooglePlayStoreVersion)
+            {
+                stageText = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(4).GetComponent<TextMeshProUGUI>();
+                scoreText = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(3).GetComponent<TextMeshProUGUI>();
+                StageDots[0] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(0).GetComponent<Image>();
+                StageDots[1] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(1).GetComponent<Image>();
+                StageDots[2] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(2).GetComponent<Image>();
+                StageDots[3] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(3).GetComponent<Image>();
+                StageDots[4] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(4).GetComponent<Image>();
 
 
-             localJsonGameValuesText = mainAssetBundle.LoadAsset<TextAsset>("BlockSnatchGameValues.json");
-             scoreText = BlockSnatchPrefab.transform.GetChild(2).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
-             finalScoreText = BlockSnatchPrefab.transform.GetChild(2).GetChild(2).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>();
-             homeScreen = BlockSnatchPrefab.transform.GetChild(2).GetChild(3).gameObject;
-             grid = BlockSnatchPrefab.transform.GetChild(0).gameObject;
-             volumeIcon = BlockSnatchPrefab.transform.GetChild(2).GetChild(3).GetChild(3).GetComponent<Image>();
-             playButton = BlockSnatchPrefab.transform.GetChild(2).GetChild(3).GetChild(1).GetComponent<Button>();
-             homeButton = BlockSnatchPrefab.transform.GetChild(2).GetChild(2).GetChild(3).GetComponent<Button>();
-             restartButton = BlockSnatchPrefab.transform.GetChild(2).GetChild(2).GetChild(0).GetComponent<Button>();
-             soundButton = BlockSnatchPrefab.transform.GetChild(2).GetChild(3).GetChild(3).GetComponent<Button>();
-             infoButton = BlockSnatchPrefab.transform.GetChild(2).GetChild(3).GetChild(2).GetComponent<Button>();
-             multiplierGameobject = BlockSnatchPrefab.transform.GetChild(2).GetChild(1).gameObject;
-             SnatchCountDigit = BlockSnatchPrefab.transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
-             SnatchCountDigitShadow = BlockSnatchPrefab.transform.GetChild(2).GetChild(1).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
-             tutorialWindow = BlockSnatchPrefab.transform.GetChild(2).GetChild(4).gameObject;
-             tutorialButton = BlockSnatchPrefab.transform.GetChild(2).GetChild(4).gameObject.GetComponent<Button>();
-             print(tutorialImages);
-             tutorialImages.Add(tutorialWindow.transform.GetChild(0).gameObject);
-             tutorialImages.Add(tutorialWindow.transform.GetChild(1).gameObject);
-             tutorialImages.Add(tutorialWindow.transform.GetChild(2).gameObject);
+                homeScreenPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(6).gameObject;
+                playButton = homeScreenPanel.transform.GetChild(1).GetComponent<Button>();
+                volumeButton = homeScreenPanel.transform.GetChild(3).GetComponent<Button>();
+                infoButton = homeScreenPanel.transform.GetChild(2).GetComponent<Button>();
+                volumeImage = homeScreenPanel.transform.GetChild(3).GetComponent<Image>();
 
-             gameOverSFX = mainAssetBundle.LoadAsset<AudioClip>("GameOver");
-             pickingSFX = mainAssetBundle.LoadAsset<AudioClip>("PickSound");
-             placingSFX = mainAssetBundle.LoadAsset<AudioClip>("PlacingSound");
-             incorrectPlacementSFX = mainAssetBundle.LoadAsset<AudioClip>("IncorrectPlacement");
-             rowCompletedSFX = mainAssetBundle.LoadAsset<AudioClip>("CompletedRow");
- */
+                gameOverPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(8).gameObject;
+                restartButton = gameOverPanel.transform.GetChild(1).GetComponent<Button>();
+                homeButton = gameOverPanel.transform.GetChild(0).GetComponent<Button>();
+
+
+                tutorialPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(10).gameObject;
+                tutoralButton = tutorialPanel.GetComponent<Button>();
+                redPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(9).gameObject;
+                canvas = GetComponent<Canvas>();
+            }
+
+            #endregion
+
+
+            #region Related to Loading Numerical Values
+            float posY = canvas.GetComponent<RectTransform>().sizeDelta.y / 2;
+            print(posY - 10f);
+            plusFiftyFinalPos = new Vector3(0f, posY - 50f, 0f);
+           
             if (isGooglePlayStoreVersion == false)
             {
                 if (File.Exists(scriptFilePath))
@@ -387,23 +474,23 @@ public class TapTapKnife : MonoBehaviour
                     breakingForceScript = assembly.GetType("BreakingForce");
                     knifeScript = assembly.GetType("Knife");
                     knifeForceScript = assembly.GetType("KnifeForce");
-                 /*   if (BlockParent == null)
-                    {
-                        print("BlockParent is nul.l");
-                    }
-                    slotPrefab.AddComponent<Slot>();
+                    /*   if (BlockParent == null)
+                       {
+                           print("BlockParent is nul.l");
+                       }
+                       slotPrefab.AddComponent<Slot>();
 
-                    for (int i = 0; i < BlockVariants.Count; i++)
-                    {
-                        BlockVariants[i].transform.GetChild(0).gameObject.AddComponent<BlockParent>();
-                        SpriteRenderer[] units = BlockVariants[i].GetComponentsInChildren<SpriteRenderer>();
-                        for (int j = 0; j < units.Length; j++)
-                        {
-                            units[j].gameObject.AddComponent<BlockUnit>();
-                        }
-                    }
+                       for (int i = 0; i < BlockVariants.Count; i++)
+                       {
+                           BlockVariants[i].transform.GetChild(0).gameObject.AddComponent<BlockParent>();
+                           SpriteRenderer[] units = BlockVariants[i].GetComponentsInChildren<SpriteRenderer>();
+                           for (int j = 0; j < units.Length; j++)
+                           {
+                               units[j].gameObject.AddComponent<BlockUnit>();
+                           }
+                       }
 
-                    */
+                       */
                 }
             }
 
@@ -460,6 +547,102 @@ public class TapTapKnife : MonoBehaviour
 
     }
 
+    IEnumerator GameValuesJsonLoader()
+    {
+        
+        string gameFolderName = devGameName + "Data";
+        string JSONFileName = devGameName + "GameValues";
+        string folderPath = Application.persistentDataPath + "/" + gameFolderName;
+        string filePath = folderPath + "/" + JSONFileName;
+        string gameValuesURL = mainJsonData["mainData"]["gameValuesUrl"];
+        WWW JsonRequest = new WWW(gameValuesURL);
+        yield return JsonRequest;
+        if (JsonRequest.error == null)
+        {
+            print("gamevaluesLoaded");
+            print(JsonRequest.text);
+            gameValuesJsonData = SimpleJSON.JSON.Parse(JsonRequest.text);
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            if (!File.Exists(filePath))
+            {
+                File.Create(filePath).Close();
+                File.WriteAllBytes(filePath, JsonRequest.bytes);
+            }
+            else
+            {
+                File.WriteAllBytes(filePath, JsonRequest.bytes);
+            }
+
+        }
+
+    }
+
+    private void LoadValuesFromJSON()
+    {
+        if (gameValuesJsonData == null)
+        {
+            print("Loaded locally");
+            gameValuesJsonData = SimpleJSON.JSON.Parse(localJsonGameValuesText.text);
+
+        }
+
+
+
+
+
+        #region Related to Loading Numerical Values
+        float posY = canvas.GetComponent<RectTransform>().sizeDelta.y / 2;
+        print(posY - 10f);
+        plusFiftyFinalPos = new Vector3(0f, posY - 50f, 0f);
+
+        knifeInitialPos = new Vector3(0f, -3, 0f);
+        knifeThrownPos = new Vector3(0f, -0.2f, 0f);
+        particlePos = new Vector3(0f, -0.5f, 0f);
+        KnifehitparticlePos = new Vector3(0f, -.1f, 0f);
+        knifeFadeLerpSpeed =20;
+        knifeThrowSpeed = gameValuesJsonData["mainData"]["knifeThrowSpeed"]; 
+        rotationSpeed =new float[] { 4, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+        numOfKnives = new Vector2[] { new Vector2(6f, 12f), new Vector2(6, 16), new Vector2(6, 16), new Vector2(6, 16), new Vector2(12, 18), new Vector2(6, 18) };
+        stopWaitTime = gameValuesJsonData["mainData"]["stopWaitTime"];
+        knifeHitPoints = gameValuesJsonData["mainData"]["knifePoints"];
+        collectiblesPoints = gameValuesJsonData["mainData"]["collectiblePoints"];
+        forwardBackwardAngles= new Vector3[]{ new Vector3(0f, 0f,3f), new Vector3(0f, 0f, 3f), new Vector3(0f, 0f, 3f), new Vector3(0f, 0f, 3f), new Vector3(0f, 0f, 0f), new Vector3(0f, 0f, 0f), new Vector3(0f, 0f, 0f), new Vector3(180f, 360f, 5f), new Vector3(180f, 0f, 0f), new Vector3(90f, 180f, 9f), new Vector3(90f, 180f, 9f), new Vector3(45f, 90f, 17f), new Vector3(45f, 90f, 17f), new Vector3(30f, 150f, 7f) };
+        #endregion
+
+        /*
+            bowSpeed = gameValuesJsonData["mainData"]["bowSpeed"];
+            Arrowspeed = gameValuesJsonData["mainData"]["arrowSpeed"];
+            cameraZoomDurationMultiplier = gameValuesJsonData["mainData"]["cameraZoomSpeed"];
+            arrowPos = new Vector3(gameValuesJsonData["mainData"]["ArrowPos"]["x"], gameValuesJsonData["mainData"]["ArrowPos"]["y"], gameValuesJsonData["mainData"]["ArrowPos"]["z"]);
+            cameraPos = new Vector3(gameValuesJsonData["mainData"]["CameraPos"]["x"], gameValuesJsonData["mainData"]["CameraPos"]["y"], gameValuesJsonData["mainData"]["CameraPos"]["z"]);
+            bowPos = new Vector3(gameValuesJsonData["mainData"]["BowPos"]["x"], gameValuesJsonData["mainData"]["BowPos"]["y"], gameValuesJsonData["mainData"]["BowPos"]["z"]);
+            targetPos = new Vector3(gameValuesJsonData["mainData"]["TargetPos"]["x"], gameValuesJsonData["mainData"]["TargetPos"]["y"], gameValuesJsonData["mainData"]["TargetPos"]["z"]);
+            print(targetPos);
+            if (gameLevel <= 50)
+            {
+                distance = gameValuesJsonData["mainData"][gameLevel.ToString()]["distance"];
+                windValue = gameValuesJsonData["mainData"][gameLevel.ToString()]["windValue"];
+                levelTarget = gameValuesJsonData["mainData"][gameLevel.ToString()]["targetBoard"];
+                isTargetdnamic = gameValuesJsonData["mainData"][gameLevel.ToString()]["IsTargetMoving"];
+                if (isTargetdnamic)
+                    targetAnimationSpeed = gameValuesJsonData["mainData"][gameLevel.ToString()]["MovementSpeed"];
+            }
+            else
+            {
+
+                distance = gameValuesJsonData["mainData"][randomLevels[randomLevelValue].ToString()]["distance"];
+                windValue = gameValuesJsonData["mainData"][randomLevels[randomLevelValue].ToString()]["windValue"];
+                levelTarget = gameValuesJsonData["mainData"][randomLevels[randomLevelValue].ToString()]["targetBoard"];
+                isTargetdnamic = gameValuesJsonData["mainData"][randomLevels[randomLevelValue].ToString()]["IsTargetMoving"];
+                if (isTargetdnamic)
+                    targetAnimationSpeed = gameValuesJsonData["mainData"][randomLevels[randomLevelValue].ToString()]["MovementSpeed"];
+            }*/
+
+    }
     public void BgImageScaler()
     {
         Camera.main.transform.position = camerPos;
@@ -578,7 +761,7 @@ public class TapTapKnife : MonoBehaviour
     {
         currentSoundState = PlayerPrefs.GetInt(soundStringPrefs);
     }
-
+    Shader textShader;
     void SetMaterialShaders()
     {
         if (!isGooglePlayStoreVersion)
@@ -586,12 +769,25 @@ public class TapTapKnife : MonoBehaviour
             List<TextMeshProUGUI> allTexts = new List<TextMeshProUGUI>();
             allTexts.Add(scoreText);
             allTexts.Add(stageText);
+            allTexts.Add(plusFiftyText);
 
-            Shader textShader = Shader.Find("TextMeshPro/Distance Field");
+             textShader = Shader.Find("TextMeshPro/Distance Field");
+           // plusFifty.materialForRendering.shader = textShader;
             for (int count = 0; count < allTexts.Count; count++)
             {
                 allTexts[count].materialForRendering.shader = textShader;
             }
+            circleMat.shader= Shader.Find("Legacy Shaders/Particles/Alpha Blended");          
+             glowOneMat.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
+             glowMat.shader = Shader.Find("Legacy Shaders/Particles/Additive"); ;
+             hitABMat.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
+             kHitABMat.shader = Shader.Find("Legacy Shaders/Particles/VertexLit Blended"); ;
+             rayABMat.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
+             ringABMat.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
+             triangleSoftOne.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
+             woodABMat.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
+             woodABMatOne.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
+             woodABMatTwo.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
         }
 
     }
@@ -604,7 +800,7 @@ public class TapTapKnife : MonoBehaviour
             if (mainJsonData["mainData"]["admobAppId"])
             {
                 appId = mainJsonData["mainData"]["admobAppId"];
-
+                print(appId);
             }
         }
         MobileAds.Initialize(appId);
@@ -1470,7 +1666,7 @@ public class TapTapKnife : MonoBehaviour
             StageDots[stageCount].gameObject.SetActive(true);
             StageDots[stageCount].sprite = ActiveBonusDots;
             RectTransform rectTransform = StageDots[stageCount].gameObject.GetComponent<RectTransform>();
-            StartCoroutine(MoveObject(rectTransform, new Vector3(0f, -46f),700f));
+            StartCoroutine(MoveObject(rectTransform, new Vector3(0f, -46f),700f,false));
             stageText.text = "Bonus Stage";
             if (currentLevel != 5)
             {
@@ -1486,20 +1682,22 @@ public class TapTapKnife : MonoBehaviour
 
     }
 
-    IEnumerator MoveObject(RectTransform MovingObject, Vector2 desiredPos,float speed)
+    IEnumerator MoveObject(RectTransform MovingObject, Vector2 desiredPos,float speed,bool destroyObject)
     {
-        if (MovingObject != null)
-        {
+        
             while (MovingObject.anchoredPosition != desiredPos)
             {
-                if (MovingObject != null)
               
                     {
                     MovingObject.anchoredPosition = Vector3.MoveTowards(MovingObject.anchoredPosition, desiredPos, speed * Time.deltaTime);
                     yield return new WaitForSeconds(Time.deltaTime);
                 }
             }
-        }
+
+        if (destroyObject)
+             {
+            Destroy(MovingObject.gameObject);
+             }
     }
 
     Difficulty RandomSelection(Difficulty diffOne, Difficulty diffTwo)
@@ -1618,18 +1816,29 @@ public class TapTapKnife : MonoBehaviour
 
     void OnRestartButtonClicked()
     {
+        print("called");
         buttonSFX.Play();
+        StartCoroutine(RestartButtonDelay());
+        gameOverPanel.SetActive(false);
+    }
+
+    IEnumerator RestartButtonDelay()
+    {
+        yield return new WaitForSeconds(.1f);
         isGameOver = false;
         gameStarted = true;
         canThrow = true;
         StartGame();
-        gameOverPanel.SetActive(false);
     }
 
-    void OnHomeButtonClicked()
+        void OnHomeButtonClicked()
     {
         buttonSFX.Play();
-        OnRestartButtonClicked();
+        //  OnRestartButtonClicked();
+        isGameOver = false;
+        canThrow = true;
+        StartGame();
+        gameOverPanel.SetActive(false);
         homeScreenPanel.SetActive(true);
         gameStarted = false;
 
@@ -1750,7 +1959,7 @@ public class TapTapKnife : MonoBehaviour
                 break;
 
             case Difficulty.Bonus:
-                // randomValue = (int)Random.Range(numOfKnives[6].x, numOfKnives[6].y);
+                
                 randomValue = 12;//number of jellys in bonus stage
                 return randomValue;
                 break;
@@ -1813,8 +2022,10 @@ public class TapTapKnife : MonoBehaviour
 
     IEnumerator ThrowKnife(GameObject currentKnife, bool lastKnife)
     {
+        print("Throwknifecalled");
         while (currentKnife.transform.position != knifeThrownPos)
         {
+
             currentKnife.transform.position = Vector3.MoveTowards(currentKnife.transform.position, knifeThrownPos, knifeThrowSpeed * Time.deltaTime);
             yield return new WaitForSeconds((knifeThrowSpeed * Time.deltaTime) / knifeThrowSpeed);
         }
@@ -1857,14 +2068,14 @@ public class TapTapKnife : MonoBehaviour
             GameObject tempBoard;
             if (currentDifficulty == Difficulty.Bonus)
             {
-                tempBoard = Instantiate(bonusBrokenBoards[brokenboardIndex], new Vector3(-1.15f, 1f, 0f), Quaternion.identity);
+                tempBoard = Instantiate(bonusBrokenBoards[brokenboardIndex], new Vector3(-0.5f, 1.7f, 0f), Quaternion.identity);
             }
             else
             {
-                tempBoard = Instantiate(brokenBoards[brokenboardIndex], new Vector3(-1.15f, 1f, 0f), Quaternion.identity);
+                tempBoard = Instantiate(brokenBoards[brokenboardIndex], new Vector3(-0.5f, 1.7f, 0f), Quaternion.identity);
             }
             StartCoroutine(coDestroyBoard(temp));
-
+            Destroy(tempBoard, 1f);
 
 
         }
@@ -1933,13 +2144,17 @@ public class TapTapKnife : MonoBehaviour
 
     }
 
-
+    GameObject plusFifties;
     public IEnumerator GameOver()
     {
         yield return new WaitForSeconds(.25f);
         StopAllCoroutines();
         gameStarted = false;
-        gameOverPanel.SetActive(true);
+        if (plusFifties != null)
+        {
+            Destroy(plusFifties);
+        }
+            gameOverPanel.SetActive(true);
         Camera.main.transform.position = new Vector3(0f, 0f, -10f);
         Destroy(currentBoard);
         for (int i = 0; i < knifeObjects.Count; i++)
@@ -1951,6 +2166,7 @@ public class TapTapKnife : MonoBehaviour
         {
             Destroy(UIKnives[i]);
         }
+
         knivesLeft = 0;
         UIKnives.Clear();
         isAttacking = false;
@@ -2026,8 +2242,10 @@ public class TapTapKnife : MonoBehaviour
         IEnumerator plusFiftyEnabler(Vector2 Pos)
     {
         GameObject plusFiftyClone = Instantiate(plusFifty,canvas.transform);
-        Destroy(plusFiftyClone, .65f);
+        plusFifties=plusFiftyClone;
+        //Destroy(plusFiftyClone, .65f);
         TextMeshProUGUI plusFiftyTextClone = plusFiftyClone.GetComponent<TextMeshProUGUI>();
+        plusFiftyTextClone.materialForRendering.shader = Shader.Find("TextMeshPro/Distance Field"); 
         plusFiftyClone.SetActive(true);
          RectTransform newRect= plusFiftyClone.GetComponent<RectTransform>();
         newRect.anchoredPosition = Pos;
@@ -2038,7 +2256,7 @@ public class TapTapKnife : MonoBehaviour
             yield return null;
         }
         yield return new WaitForSeconds(.025f);
-        StartCoroutine(MoveObject(newRect, testPOs, 2500f));
+        StartCoroutine(MoveObject(newRect, plusFiftyFinalPos, 2500f,true));
        // yield return new WaitForSeconds(.5f);
      //   Destroy(plusFiftyTextClone, .3f);
       //  plusFifty.SetActive(false);
@@ -2048,5 +2266,7 @@ public class TapTapKnife : MonoBehaviour
 
 
     }
-    #endregion
+  
 }
+#endregion
+#endregion

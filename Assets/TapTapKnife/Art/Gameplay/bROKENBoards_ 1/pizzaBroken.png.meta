@@ -14,6 +14,18 @@ TextureImporter:
   - first:
       213: 3802540608395075317
     second: pizza_3
+  - first:
+      213: -3470637932228348323
+    second: pizzaBroken_0
+  - first:
+      213: 6414132111097109503
+    second: pizzaBroken_1
+  - first:
+      213: -3330107232910779133
+    second: pizzaBroken_2
+  - first:
+      213: 3095825322633374742
+    second: pizzaBroken_3
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -110,85 +122,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pizza_0
+      name: pizzaBroken_0
       rect:
         serializedVersion: 2
         x: 0
         y: 290.5
         width: 290.5
         height: 290.5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4290776c0ad6d7846a6c2db7e1de9fca
-      internalID: -6444940296795206775
+      spriteID: c9c063bc62cd5564b8d8b53dd0f45f03
+      internalID: -3470637932228348323
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pizza_1
+      name: pizzaBroken_1
       rect:
         serializedVersion: 2
         x: 290
         y: 290.5
         width: 290.5
         height: 290.5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3300a5507dfe1044cae1f06ac8eafb8e
-      internalID: 5667847003176893529
+      spriteID: f0799f03990103a49a4d0b326d501b74
+      internalID: 6414132111097109503
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pizza_2
+      name: pizzaBroken_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0.5
         width: 290.5
         height: 290.5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e271b78f33e5c424192829c0963d2878
-      internalID: 4501626643336248173
+      spriteID: 8a6da29d4f407684797ff65fed103d7d
+      internalID: -3330107232910779133
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pizza_3
+      name: pizzaBroken_3
       rect:
         serializedVersion: 2
         x: 290
         y: 0.5
         width: 290.5
         height: 290.5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a80fc49b1b1fda04fa8e39730a0eb6f9
-      internalID: 3802540608395075317
+      spriteID: 65a66e26f98dc484ba0cf7c4065e3e0a
+      internalID: 3095825322633374742
       vertices: []
       indices: 
       edges: []

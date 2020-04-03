@@ -1,0 +1,54 @@
+{
+   "Info":
+   {
+      "Version":1,
+      "Type":"GameValues"
+    },
+   "mainData":
+   {
+    "knifeThrowSpeed":100,
+	  "NumOfKnives":
+	  {
+    	"easy":
+    	{
+  	  "x":6,
+  	  "y":12
+    	},
+    	"easyMedium":
+    	{
+  	  "x":6,
+  	  "y":18
+  	 
+    	},
+    	"medium":
+    	{
+  	  "x":6,
+  	  "y":18
+    	},
+    	
+    	"mediumHard":
+    	{
+  	  "x":6,
+  	  "y":12
+  	 
+    	},
+    	"hard":
+    	{
+  	  "x":6,
+  	  "y":18
+  	 
+    	},
+    	"easyHard":
+    	{
+  	  "x":6,
+  	  "y":16
+  	 
+    	}
+	  },
+ 
+  "stopWaitTime":0.2,
+  "knifePoints":10,
+  "collectiblePoints":50
+  
+  }
+}
