@@ -5,8 +5,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
-//using Strobotnik.GUA;
-//using GoogleMobileAds.Api;
+using Strobotnik.GUA;
+using GoogleMobileAds.Api;
 using System.IO;
 
 public class TapTapKnife : MonoBehaviour
@@ -157,9 +157,9 @@ public class TapTapKnife : MonoBehaviour
     string scriptFilePath;
     string gameFolderName = "";
 
-   // bool analyticsSetupDone = false;
+   bool analyticsSetupDone = false;
 
-   // GameObject analyticsGameobject;
+    GameObject analyticsGameobject;
     GameObject TapTapKnifePrefab;
 
     public TextAsset localJsonGameValuesText;
@@ -221,7 +221,8 @@ public class TapTapKnife : MonoBehaviour
         SetStringsFromMainJsonAndLoadPrefs();
       
         StartCoroutine(GameValuesJsonLoader());
-      //  LoadValuesFromJSON();
+        yield return new WaitForSeconds(2f);
+     //   LoadValuesFromJSON();
 
          GetReferences();
 
@@ -232,7 +233,7 @@ public class TapTapKnife : MonoBehaviour
 
         SetMaterialShaders();
         Application.targetFrameRate = 60;
-        /*   if (isGooglePlayStoreVersion)
+          /* if (isGooglePlayStoreVersion)
            {
                LoadLocalGameValues();
            }*/
@@ -253,7 +254,7 @@ public class TapTapKnife : MonoBehaviour
 
         if (isGooglePlayStoreVersion)
         {
-            AdScript.AdInstance.InitializeMobileAds(mainJsonData);
+           InitializeMobileAds();
         }
         yield return null;
     }
@@ -282,7 +283,7 @@ public class TapTapKnife : MonoBehaviour
 
     void GetReferences()
     {
-      //  analyticsSetupDone = false;
+        analyticsSetupDone = false;
         bool useLocalGamePrefab = false;
         if (gameDownloader != null)
         {
@@ -518,7 +519,7 @@ public class TapTapKnife : MonoBehaviour
 
         
 
-       /* if (analyticsGameobject == null)
+        if (analyticsGameobject == null)
         {
             if (isGooglePlayStoreVersion)
             {
@@ -555,7 +556,7 @@ public class TapTapKnife : MonoBehaviour
                     }
                 }
             }
-        }*/
+        }
         
 
 
@@ -593,12 +594,12 @@ public class TapTapKnife : MonoBehaviour
             }
 
         }
-
+        LoadValuesFromJSON();
     }
 
     private void LoadValuesFromJSON()
     {
-        if (gameValuesJsonData == null)
+        if (gameValuesJsonData == null&&!isGooglePlayStoreVersion)
         {
             print("Loaded locally");
             gameValuesJsonData = SimpleJSON.JSON.Parse(localJsonGameValuesText.text);
@@ -807,7 +808,7 @@ public class TapTapKnife : MonoBehaviour
 
     }
 
-    /* public void InitializeMobileAds()
+     public void InitializeMobileAds()
      {
          string appId = "ca-app-pub-3940256099942544~3347511713";
          if (mainJsonData != null)
@@ -859,7 +860,7 @@ public class TapTapKnife : MonoBehaviour
 
              rewardBasedVideo.Show();
          }
-     }*/
+     }
     /*       private void Start()
        {        
            ButtonAddListeners();
@@ -874,7 +875,7 @@ public class TapTapKnife : MonoBehaviour
         {
             if (isGooglePlayStoreVersion)
             {
-                AdScript.AdInstance.ShowVideoAd();
+                ShowVideoAd();
             }
         }
     }
