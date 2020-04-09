@@ -38,7 +38,7 @@ public class Knife : MonoBehaviour
         
       if (other.gameObject.name.Contains(TapTapKnife.knifeString))
         {
-            print("HitKnifeHit   "+GetInstanceID());
+            //print("HitKnifeHit   "+GetInstanceID());
             gameObject.GetComponent<BoxCollider2D>().enabled = false;
             
             TapTapKnife.isGameOver = true;

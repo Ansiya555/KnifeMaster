@@ -5,8 +5,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
-using Strobotnik.GUA;
-using GoogleMobileAds.Api;
+//using Strobotnik.GUA;
+//using GoogleMobileAds.Api;
 using System.IO;
 
 public class TapTapKnife : MonoBehaviour
@@ -146,7 +146,7 @@ public class TapTapKnife : MonoBehaviour
     string devGameName;
     string gameTitle;
     string paytmGamesLink;
-    SimpleJSON.JSONNode mainJsonData;
+    public SimpleJSON.JSONNode mainJsonData;
     GameDownloader gameDownloader;
     public System.Reflection.Assembly assembly;
     public SimpleJSON.JSONNode gameValuesData;
@@ -157,9 +157,9 @@ public class TapTapKnife : MonoBehaviour
     string scriptFilePath;
     string gameFolderName = "";
 
-    bool analyticsSetupDone = false;
+   // bool analyticsSetupDone = false;
 
-    GameObject analyticsGameobject;
+   // GameObject analyticsGameobject;
     GameObject TapTapKnifePrefab;
 
     public TextAsset localJsonGameValuesText;
@@ -219,8 +219,9 @@ public class TapTapKnife : MonoBehaviour
 
         GetMainAssetBundleAndMainJsonData();
         SetStringsFromMainJsonAndLoadPrefs();
+      
         StartCoroutine(GameValuesJsonLoader());
-        LoadValuesFromJSON();
+      //  LoadValuesFromJSON();
 
          GetReferences();
 
@@ -252,7 +253,7 @@ public class TapTapKnife : MonoBehaviour
 
         if (isGooglePlayStoreVersion)
         {
-            InitializeMobileAds();
+            AdScript.AdInstance.InitializeMobileAds(mainJsonData);
         }
         yield return null;
     }
@@ -281,7 +282,7 @@ public class TapTapKnife : MonoBehaviour
 
     void GetReferences()
     {
-        analyticsSetupDone = false;
+      //  analyticsSetupDone = false;
         bool useLocalGamePrefab = false;
         if (gameDownloader != null)
         {
@@ -290,9 +291,10 @@ public class TapTapKnife : MonoBehaviour
 
         if (mainAssetBundle != null)
         {
+            print("assets loaded from bundle");
             if (isGooglePlayStoreVersion)
             {
-                TapTapKnifePrefab = this.gameObject.transform.parent.gameObject;
+                TapTapKnifePrefab = this.gameObject.transform.gameObject;
 
             }
             else
@@ -303,8 +305,13 @@ public class TapTapKnife : MonoBehaviour
 
 
             #region related to prefab and art assets loading from assetbundle
-
-
+         
+          
+            if (mainAssetBundle.LoadAsset<Sprite>("v2_01") != null)
+            {
+                print("assetbundle contains sprites");
+            }
+            boardSkins = new Sprite[10];
             boardSkins[0] = mainAssetBundle.LoadAsset<Sprite>("v2_01");
             boardSkins[1] = mainAssetBundle.LoadAsset<Sprite>("v2_02");
             boardSkins[2] = mainAssetBundle.LoadAsset<Sprite>("v2_03");
@@ -316,10 +323,12 @@ public class TapTapKnife : MonoBehaviour
             boardSkins[8] = mainAssetBundle.LoadAsset<Sprite>("v2_09");
             boardSkins[9] = mainAssetBundle.LoadAsset<Sprite>("v2_10");
 
+            bonusBoardSkins = new Sprite[3];
             bonusBoardSkins[0] = mainAssetBundle.LoadAsset<Sprite>("burger");
             bonusBoardSkins[1] = mainAssetBundle.LoadAsset<Sprite>("Doughnut");
             bonusBoardSkins[2] = mainAssetBundle.LoadAsset<Sprite>("pizza");
 
+            brokenBoards = new GameObject[10];
             brokenBoards[0] = mainAssetBundle.LoadAsset<GameObject>("V201");
             brokenBoards[1] = mainAssetBundle.LoadAsset<GameObject>("V202");
             brokenBoards[2] = mainAssetBundle.LoadAsset<GameObject>("V203");
@@ -332,18 +341,21 @@ public class TapTapKnife : MonoBehaviour
             brokenBoards[9] = mainAssetBundle.LoadAsset<GameObject>("V210");
             // brokenBoards[10] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
 
+            bonusBrokenBoards = new GameObject[10];
             bonusBrokenBoards[0] = mainAssetBundle.LoadAsset<GameObject>("burger");
             bonusBrokenBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Doughnut");
             bonusBrokenBoards[2] = mainAssetBundle.LoadAsset<GameObject>("pizza");
 
             knifePrefab = mainAssetBundle.LoadAsset<GameObject>("Knife");
 
+            easyBoards = new GameObject[5];
             easyBoards[0] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_1");
             easyBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_2");
             easyBoards[2] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_3");
             easyBoards[3] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_4");
             easyBoards[4] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_5");
 
+            easyMediumBoards = new GameObject[12];
             easyMediumBoards[0] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_1");
             easyMediumBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_2");
             easyMediumBoards[2] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_3");
@@ -357,6 +369,8 @@ public class TapTapKnife : MonoBehaviour
             easyMediumBoards[10] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_6");
             easyMediumBoards[11] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_7");
 
+
+            mediumBoards = new GameObject[7];
             mediumBoards[0] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_1");
             mediumBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_2");
             mediumBoards[2] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_3");
@@ -365,6 +379,7 @@ public class TapTapKnife : MonoBehaviour
             mediumBoards[5] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_6");
             mediumBoards[6] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_7");
 
+            mediumHardBoards = new GameObject[12];
             mediumHardBoards[0] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_1");
             mediumHardBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_2");
             mediumHardBoards[2] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_3");
@@ -378,14 +393,14 @@ public class TapTapKnife : MonoBehaviour
             mediumHardBoards[10] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_6");
             mediumHardBoards[11] = mainAssetBundle.LoadAsset<GameObject>("Medium_Board_7");
 
-
+            hardBoards = new GameObject[5];
             hardBoards[0] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_1");
             hardBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_2");
             hardBoards[2] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_3");
             hardBoards[3] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_4");
             hardBoards[4] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_5");
 
-
+            easyHardBoards = new GameObject[10];
             easyHardBoards[0] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_1");
             easyHardBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_2");
             easyHardBoards[2] = mainAssetBundle.LoadAsset<GameObject>("Hard_Board_3");
@@ -408,67 +423,66 @@ public class TapTapKnife : MonoBehaviour
             InActiveBonusDots = mainAssetBundle.LoadAsset<Sprite>("dots 0");
             VolumeOFF = mainAssetBundle.LoadAsset<Sprite>("No sound");
             VolumeOn = mainAssetBundle.LoadAsset<Sprite>("sound");
-           /* collectibleVFX = mainAssetBundle.LoadAsset<GameObject>("VFX_JellyBlast");
-            knifeHitKnifeVfx = mainAssetBundle.LoadAsset<GameObject>("VFX_OnKnifeHit");
-            boardHitVFX = mainAssetBundle.LoadAsset<GameObject>("VFX_KnifeHit");
-            boardDestroyVFX = mainAssetBundle.LoadAsset<GameObject>("VFX_WoodenBoard Explosion V2");
-            knifeUIObject = mainAssetBundle.LoadAsset<GameObject>("KnifeUI");
-            circleMat = mainAssetBundle.LoadAsset<Material>("circle 1"); 
-            glowOneMat = mainAssetBundle.LoadAsset<Material>("glow 1");
-            glowMat = mainAssetBundle.LoadAsset<Material>("Glow_add_mat");
-            hitABMat = mainAssetBundle.LoadAsset<Material>("Glow_add_mat");
-            kHitABMat = mainAssetBundle.LoadAsset<Material>("Khit_AB_mat");
-            rayABMat = mainAssetBundle.LoadAsset<Material>("Ray_AB_mat");
-            ringABMat = mainAssetBundle.LoadAsset<Material>("Ring_AB_mat");
-             triangleSoftOne = mainAssetBundle.LoadAsset<Material>("triangle_soft 1");
-             woodABMat = mainAssetBundle.LoadAsset<Material>("Wood_AB_mat");
-             woodABMatOne = mainAssetBundle.LoadAsset<Material>("Wood_AB_mat 1");
-             woodABMatTwo = mainAssetBundle.LoadAsset<Material>("Wood_AB_mat 2");
+            /* collectibleVFX = mainAssetBundle.LoadAsset<GameObject>("VFX_JellyBlast");
+             knifeHitKnifeVfx = mainAssetBundle.LoadAsset<GameObject>("VFX_OnKnifeHit");
+             boardHitVFX = mainAssetBundle.LoadAsset<GameObject>("VFX_KnifeHit");
+             boardDestroyVFX = mainAssetBundle.LoadAsset<GameObject>("VFX_WoodenBoard Explosion V2");
+             knifeUIObject = mainAssetBundle.LoadAsset<GameObject>("KnifeUI");
+             circleMat = mainAssetBundle.LoadAsset<Material>("circle 1"); 
+             glowOneMat = mainAssetBundle.LoadAsset<Material>("glow 1");
+             glowMat = mainAssetBundle.LoadAsset<Material>("Glow_add_mat");
+             hitABMat = mainAssetBundle.LoadAsset<Material>("Glow_add_mat");
+             kHitABMat = mainAssetBundle.LoadAsset<Material>("Khit_AB_mat");
+             rayABMat = mainAssetBundle.LoadAsset<Material>("Ray_AB_mat");
+             ringABMat = mainAssetBundle.LoadAsset<Material>("Ring_AB_mat");
+              triangleSoftOne = mainAssetBundle.LoadAsset<Material>("triangle_soft 1");
+              woodABMat = mainAssetBundle.LoadAsset<Material>("Wood_AB_mat");
+              woodABMatOne = mainAssetBundle.LoadAsset<Material>("Wood_AB_mat 1");
+              woodABMatTwo = mainAssetBundle.LoadAsset<Material>("Wood_AB_mat 2");
 
-            */
+             */
             #endregion
 
-            #region Related to Child gameobjects
-            if (!isGooglePlayStoreVersion)
-            {
-                stageText = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(4).GetComponent<TextMeshProUGUI>();
-                scoreText = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(3).GetComponent<TextMeshProUGUI>();
-                StageDots[0] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(0).GetComponent<Image>();
-                StageDots[1] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(1).GetComponent<Image>();
-                StageDots[2] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(2).GetComponent<Image>();
-                StageDots[3] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(3).GetComponent<Image>();
-                StageDots[4] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(4).GetComponent<Image>();
+               #region Related to Child gameobjects
+             if (!isGooglePlayStoreVersion)
+               {
+                   stageText = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(4).GetComponent<TextMeshProUGUI>();
+                   scoreText = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(3).GetComponent<TextMeshProUGUI>();
+                   StageDots[0] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(0).GetComponent<Image>();
+                   StageDots[1] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(1).GetComponent<Image>();
+                   StageDots[2] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(2).GetComponent<Image>();
+                   StageDots[3] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(3).GetComponent<Image>();
+                   StageDots[4] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(4).GetComponent<Image>();
 
 
-                homeScreenPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(6).gameObject;
-                playButton = homeScreenPanel.transform.GetChild(1).GetComponent<Button>();
-                volumeButton = homeScreenPanel.transform.GetChild(3).GetComponent<Button>();
-                infoButton = homeScreenPanel.transform.GetChild(2).GetComponent<Button>();
-                volumeImage = homeScreenPanel.transform.GetChild(3).GetComponent<Image>();
+                   homeScreenPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(6).gameObject;
+                   playButton = homeScreenPanel.transform.GetChild(1).GetComponent<Button>();
+                   volumeButton = homeScreenPanel.transform.GetChild(3).GetComponent<Button>();
+                   infoButton = homeScreenPanel.transform.GetChild(2).GetComponent<Button>();
+                   volumeImage = homeScreenPanel.transform.GetChild(3).GetComponent<Image>();
 
-                gameOverPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(8).gameObject;
-                restartButton = gameOverPanel.transform.GetChild(1).GetComponent<Button>();
-                homeButton = gameOverPanel.transform.GetChild(0).GetComponent<Button>();
-
-
-                tutorialPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(10).gameObject;
-                tutoralButton = tutorialPanel.GetComponent<Button>();
-                redPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(9).gameObject;
-                canvas = GetComponent<Canvas>();
-            }
-
-            #endregion
+                   gameOverPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(8).gameObject;
+                   restartButton = gameOverPanel.transform.GetChild(1).GetComponent<Button>();
+                   homeButton = gameOverPanel.transform.GetChild(0).GetComponent<Button>();
 
 
-            #region Related to Loading Numerical Values
+                   tutorialPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(10).gameObject;
+                   tutoralButton = tutorialPanel.GetComponent<Button>();
+                   redPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(9).gameObject;
+                   canvas = TapTapKnifePrefab.transform.GetChild(1).GetComponent<Canvas>();
+               }
+
+               #endregion
+       
+          #region Related to Loading Numerical Values
             float posY = canvas.GetComponent<RectTransform>().sizeDelta.y / 2;
             print(posY - 10f);
             plusFiftyFinalPos = new Vector3(0f, posY - 50f, 0f);
            
-            if (isGooglePlayStoreVersion == false)
+           if (isGooglePlayStoreVersion == false)
             {
-                if (File.Exists(scriptFilePath))
-                {
+              if (File.Exists(scriptFilePath))
+               {
 
                     assembly = System.Reflection.Assembly.LoadFrom(scriptFilePath);
                     breakingForceScript = assembly.GetType("BreakingForce");
@@ -490,21 +504,21 @@ public class TapTapKnife : MonoBehaviour
                            }
                        }
 
-                       */
-                }
+                      */
+              }
             }
 
 
         }
        // BgRenderer = TapTapKnifePrefab.transform.GetChild(0).GetComponent<SpriteRenderer>();
-        BgImageScaler();
+      //  BgImageScaler();
 
 
 
 
+        
 
-
-        if (analyticsGameobject == null)
+       /* if (analyticsGameobject == null)
         {
             if (isGooglePlayStoreVersion)
             {
@@ -541,8 +555,8 @@ public class TapTapKnife : MonoBehaviour
                     }
                 }
             }
-        }
-
+        }*/
+        
 
 
     }
@@ -555,6 +569,7 @@ public class TapTapKnife : MonoBehaviour
         string folderPath = Application.persistentDataPath + "/" + gameFolderName;
         string filePath = folderPath + "/" + JSONFileName;
         string gameValuesURL = mainJsonData["mainData"]["gameValuesUrl"];
+       
         WWW JsonRequest = new WWW(gameValuesURL);
         yield return JsonRequest;
         if (JsonRequest.error == null)
@@ -792,66 +807,79 @@ public class TapTapKnife : MonoBehaviour
 
     }
 
-    public void InitializeMobileAds()
-    {
-        string appId = "ca-app-pub-3940256099942544~3347511713";
-        if (mainJsonData != null)
-        {
-            if (mainJsonData["mainData"]["admobAppId"])
-            {
-                appId = mainJsonData["mainData"]["admobAppId"];
-                print(appId);
-            }
-        }
-        MobileAds.Initialize(appId);
-        this.rewardBasedVideo = RewardBasedVideoAd.Instance;
-        rewardBasedVideo.OnAdClosed += HandleRewardBasedVideoClosed;
-        RequestRewardBasedVideo();
+    /* public void InitializeMobileAds()
+     {
+         string appId = "ca-app-pub-3940256099942544~3347511713";
+         if (mainJsonData != null)
+         {
+             if (mainJsonData["mainData"]["admobAppId"])
+             {
+                 appId = mainJsonData["mainData"]["admobAppId"];
+                 print(appId);
+             }
+         }
+         MobileAds.Initialize(appId);
+         this.rewardBasedVideo = RewardBasedVideoAd.Instance;
+         rewardBasedVideo.OnAdClosed += HandleRewardBasedVideoClosed;
+         RequestRewardBasedVideo();
 
-    }
-    RewardBasedVideoAd rewardBasedVideo;
+     }
+     RewardBasedVideoAd rewardBasedVideo;
 
-    int deathAdInterval = 3;
-    int numOfDeaths = 0;
-    private void RequestRewardBasedVideo()
-    {
-        string adUnitId = "ca-app-pub-3940256099942544/5224354917";
-        if (mainJsonData != null)
-        {
-            if (mainJsonData["mainData"]["admobAdId"])
-            {
-                adUnitId = mainJsonData["mainData"]["admobAdId"];
-            }
-            if (mainJsonData["mainData"]["deathAdInterval"])
-            {
-                deathAdInterval = mainJsonData["mainData"]["deathAdInterval"];
-            }
-        }
-        // Create an empty ad request.
-        AdRequest request = new AdRequest.Builder().Build();
-        // Load the rewarded video ad with the request.
-        this.rewardBasedVideo.LoadAd(request, adUnitId);
-    }
 
-    public void HandleRewardBasedVideoClosed(object sender, System.EventArgs args)
-    {
-        this.RequestRewardBasedVideo();
-    }
+     private void RequestRewardBasedVideo()
+     {
+         string adUnitId = "ca-app-pub-3940256099942544/5224354917";
+         if (mainJsonData != null)
+         {
+             if (mainJsonData["mainData"]["admobAdId"])
+             {
+                 adUnitId = mainJsonData["mainData"]["admobAdId"];
+             }
+             if (mainJsonData["mainData"]["deathAdInterval"])
+             {
+                 deathAdInterval = mainJsonData["mainData"]["deathAdInterval"];
+             }
+         }
+         // Create an empty ad request.
+         AdRequest request = new AdRequest.Builder().Build();
+         // Load the rewarded video ad with the request.
+         rewardBasedVideo.LoadAd(request, adUnitId);
+     }
 
-    private void ShowVideoAd()
-    {
-        if (rewardBasedVideo.IsLoaded())
-        {
-            rewardBasedVideo.Show();
-        }
-    }
+     public void HandleRewardBasedVideoClosed(object sender, System.EventArgs args)
+     {
+         RequestRewardBasedVideo();
+     }
+
+     private void ShowVideoAd()
+     {
+         if (rewardBasedVideo.IsLoaded())
+         {
+
+             rewardBasedVideo.Show();
+         }
+     }*/
     /*       private void Start()
        {        
            ButtonAddListeners();
            StartGame();
        }*/
+    int deathAdInterval = 3;
+    int numOfDeaths = 0;
+    public void HandleDeathVideoAd()
+    {
+        numOfDeaths++;
+        if (numOfDeaths % deathAdInterval == 0)
+        {
+            if (isGooglePlayStoreVersion)
+            {
+                AdScript.AdInstance.ShowVideoAd();
+            }
+        }
+    }
 
-    private void Update()
+        private void Update()
     {
 
 
@@ -1816,19 +1844,21 @@ public class TapTapKnife : MonoBehaviour
 
     void OnRestartButtonClicked()
     {
-        print("called");
+       // print("called");
         buttonSFX.Play();
         StartCoroutine(RestartButtonDelay());
         gameOverPanel.SetActive(false);
+        isGameOver = false;
+        StartGame();
     }
 
     IEnumerator RestartButtonDelay()
     {
-        yield return new WaitForSeconds(.1f);
-        isGameOver = false;
+        yield return new WaitForSeconds(.5f);
+        
         gameStarted = true;
         canThrow = true;
-        StartGame();
+        
     }
 
         void OnHomeButtonClicked()
@@ -2022,7 +2052,7 @@ public class TapTapKnife : MonoBehaviour
 
     IEnumerator ThrowKnife(GameObject currentKnife, bool lastKnife)
     {
-        print("Throwknifecalled");
+
         while (currentKnife.transform.position != knifeThrownPos)
         {
 
@@ -2142,19 +2172,27 @@ public class TapTapKnife : MonoBehaviour
     {
         StartCoroutine(GameOver());
 
+
+
     }
 
-    GameObject plusFifties;
+  //  GameObject plusFifties;
+  List<GameObject> plusFifties=new List<GameObject>();
+
     public IEnumerator GameOver()
     {
         yield return new WaitForSeconds(.25f);
         StopAllCoroutines();
         gameStarted = false;
-        if (plusFifties != null)
+        foreach (GameObject plusFiftyUnit in plusFifties)
         {
-            Destroy(plusFifties);
+            if (plusFiftyUnit != null)
+            {
+                Destroy(plusFiftyUnit);
+            }
         }
-            gameOverPanel.SetActive(true);
+        plusFifties = new List<GameObject>();
+        gameOverPanel.SetActive(true);
         Camera.main.transform.position = new Vector3(0f, 0f, -10f);
         Destroy(currentBoard);
         for (int i = 0; i < knifeObjects.Count; i++)
@@ -2173,6 +2211,7 @@ public class TapTapKnife : MonoBehaviour
         score = 0;
         UpdateScore(0);
         StageDotsUI();
+        HandleDeathVideoAd();
     }
 
     private void StageDotsUI()
@@ -2242,7 +2281,7 @@ public class TapTapKnife : MonoBehaviour
         IEnumerator plusFiftyEnabler(Vector2 Pos)
     {
         GameObject plusFiftyClone = Instantiate(plusFifty,canvas.transform);
-        plusFifties=plusFiftyClone;
+        plusFifties.Add(plusFiftyClone);
         //Destroy(plusFiftyClone, .65f);
         TextMeshProUGUI plusFiftyTextClone = plusFiftyClone.GetComponent<TextMeshProUGUI>();
         plusFiftyTextClone.materialForRendering.shader = Shader.Find("TextMeshPro/Distance Field"); 

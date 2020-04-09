@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Reflection;
 using System;
-using Strobotnik.GUA;
+//using Strobotnik.GUA;
 
 public class GameDownloader : MonoBehaviour
 {
@@ -412,7 +412,7 @@ public class GameDownloader : MonoBehaviour
             }
             GameObject tempObject = new GameObject(devGameName);
             assembly = Assembly.LoadFrom(scriptFilePath);
-            Type mainScript = assembly.GetType(devGameName);
+            Type mainScript = assembly.GetType("TapTapKnife");
             tempObject.AddComponent(mainScript);
         }
 

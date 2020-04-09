@@ -38,10 +38,10 @@ namespace GoogleMobileAds.Common
             // Create a texture. Texture size does not matter, since
             // LoadImage will replace with with incoming image size.
             Texture2D nativeAdTexture = new Texture2D(1, 1);
-            if (!nativeAdTexture.LoadImage(img))
+            //if (!nativeAdTexture.LoadImage(img))
             {
-                throw new InvalidOperationException(@"Could not load custom native template
-                        image asset as texture");
+                //throw new InvalidOperationException(@"Could not load custom native template
+                        //image asset as texture");
             }
 
             return nativeAdTexture;
