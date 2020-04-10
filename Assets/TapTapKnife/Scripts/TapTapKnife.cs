@@ -170,9 +170,9 @@ public class TapTapKnife : MonoBehaviour
 
     string soundStringPrefs;
 
-    [SerializeField] System.Type knifeScript; 
-    [SerializeField] System.Type breakingForceScript; 
-    [SerializeField] System.Type knifeForceScript; 
+    [SerializeField] System.Type Knife; 
+    [SerializeField] System.Type BreakingForce; 
+    [SerializeField] System.Type KnifeForce; 
    
     Vector3 camerPos=new Vector3(-.23f,0f,-10f);
     [SerializeField] SpriteRenderer BgRenderer;
@@ -221,7 +221,7 @@ public class TapTapKnife : MonoBehaviour
         SetStringsFromMainJsonAndLoadPrefs();
       
         StartCoroutine(GameValuesJsonLoader());
-        yield return new WaitForSeconds(2f);
+       
      //   LoadValuesFromJSON();
 
          GetReferences();
@@ -233,10 +233,10 @@ public class TapTapKnife : MonoBehaviour
 
         SetMaterialShaders();
         Application.targetFrameRate = 60;
-          /* if (isGooglePlayStoreVersion)
-           {
-               LoadLocalGameValues();
-           }*/
+        /* if (isGooglePlayStoreVersion)
+         {
+             LoadLocalGameValues();
+         }*/
         /*  if (mainJsonData != null)
           {
               print("paytm Version");
@@ -244,6 +244,7 @@ public class TapTapKnife : MonoBehaviour
               yield return new WaitForSeconds(1f);
 
           }*/
+        yield return new WaitForSeconds(8f);
         StartGame();
         string loadingBarAmountPrefsText = "LoadingBarFillAmount";
         PlayerPrefs.SetFloat(devGameName + loadingBarAmountPrefsText, 1f);
@@ -414,7 +415,7 @@ public class TapTapKnife : MonoBehaviour
             easyHardBoards[9] = mainAssetBundle.LoadAsset<GameObject>("Easy_Board_5");
 
             bonusBoard = mainAssetBundle.LoadAsset<GameObject>("Bonus_Board_5");
-
+            knifeUIObject= mainAssetBundle.LoadAsset<GameObject>("KnifeUI");
             plusFifty = mainAssetBundle.LoadAsset<GameObject>("Plus50");
             plusFiftyText = plusFifty.GetComponent<TextMeshProUGUI>();
 
@@ -444,70 +445,71 @@ public class TapTapKnife : MonoBehaviour
              */
             #endregion
 
-               #region Related to Child gameobjects
-             if (!isGooglePlayStoreVersion)
-               {
-                   stageText = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(4).GetComponent<TextMeshProUGUI>();
-                   scoreText = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(3).GetComponent<TextMeshProUGUI>();
-                   StageDots[0] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(0).GetComponent<Image>();
-                   StageDots[1] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(1).GetComponent<Image>();
-                   StageDots[2] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(2).GetComponent<Image>();
-                   StageDots[3] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(3).GetComponent<Image>();
-                   StageDots[4] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(4).GetComponent<Image>();
-
-
-                   homeScreenPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(6).gameObject;
-                   playButton = homeScreenPanel.transform.GetChild(1).GetComponent<Button>();
-                   volumeButton = homeScreenPanel.transform.GetChild(3).GetComponent<Button>();
-                   infoButton = homeScreenPanel.transform.GetChild(2).GetComponent<Button>();
-                   volumeImage = homeScreenPanel.transform.GetChild(3).GetComponent<Image>();
-
-                   gameOverPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(8).gameObject;
-                   restartButton = gameOverPanel.transform.GetChild(1).GetComponent<Button>();
-                   homeButton = gameOverPanel.transform.GetChild(0).GetComponent<Button>();
-
-
-                   tutorialPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(10).gameObject;
-                   tutoralButton = tutorialPanel.GetComponent<Button>();
-                   redPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(9).gameObject;
-                   canvas = TapTapKnifePrefab.transform.GetChild(1).GetComponent<Canvas>();
-               }
-
-               #endregion
-       
-          #region Related to Loading Numerical Values
-            float posY = canvas.GetComponent<RectTransform>().sizeDelta.y / 2;
-            print(posY - 10f);
-            plusFiftyFinalPos = new Vector3(0f, posY - 50f, 0f);
-           
-           if (isGooglePlayStoreVersion == false)
+            #region Related to Child gameobjects
+            if (!isGooglePlayStoreVersion)
             {
-              if (File.Exists(scriptFilePath))
-               {
+                stageText = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(4).GetComponent<TextMeshProUGUI>();
+                scoreText = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(3).GetComponent<TextMeshProUGUI>();
+                StageDots = new Image[5];
+                StageDots[0] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(0).GetComponent<Image>();
+                StageDots[1] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(1).GetComponent<Image>();
+                StageDots[2] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(2).GetComponent<Image>();
+                StageDots[3] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(3).GetComponent<Image>();
+                StageDots[4] = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(0).transform.GetChild(4).GetComponent<Image>();
 
-                    assembly = System.Reflection.Assembly.LoadFrom(scriptFilePath);
-                    breakingForceScript = assembly.GetType("BreakingForce");
-                    knifeScript = assembly.GetType("Knife");
-                    knifeForceScript = assembly.GetType("KnifeForce");
-                    /*   if (BlockParent == null)
-                       {
-                           print("BlockParent is nul.l");
-                       }
-                       slotPrefab.AddComponent<Slot>();
+                knifeUIParent = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(1).gameObject;
+                homeScreenPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(6).gameObject;
+                playButton = homeScreenPanel.transform.GetChild(1).GetComponent<Button>();
+                volumeButton = homeScreenPanel.transform.GetChild(3).GetComponent<Button>();
+                infoButton = homeScreenPanel.transform.GetChild(2).GetComponent<Button>();
+                volumeImage = homeScreenPanel.transform.GetChild(3).GetComponent<Image>();
 
-                       for (int i = 0; i < BlockVariants.Count; i++)
-                       {
-                           BlockVariants[i].transform.GetChild(0).gameObject.AddComponent<BlockParent>();
-                           SpriteRenderer[] units = BlockVariants[i].GetComponentsInChildren<SpriteRenderer>();
-                           for (int j = 0; j < units.Length; j++)
-                           {
-                               units[j].gameObject.AddComponent<BlockUnit>();
-                           }
-                       }
+                gameOverPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(8).gameObject;
+                restartButton = gameOverPanel.transform.GetChild(1).GetComponent<Button>();
+                homeButton = gameOverPanel.transform.GetChild(0).GetComponent<Button>();
 
-                      */
-              }
+
+                tutorialPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(10).gameObject;
+                tutoralButton = tutorialPanel.GetComponent<Button>();
+                redPanel = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(9).gameObject;
+                canvas = TapTapKnifePrefab.transform.GetChild(1).GetComponent<Canvas>();
+                float posY = canvas.GetComponent<RectTransform>().sizeDelta.y / 2;
+                print(posY - 10f);
+                plusFiftyFinalPos = new Vector3(0f, posY - 50f, 0f);
+
+                collectibleSFX = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(5).transform.GetChild(0).GetComponent<AudioSource>();
+                knifeHitBoardSFX = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(5).transform.GetChild(1).GetComponent<AudioSource>(); ;
+                knifeHitKnifeSFX = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(5).transform.GetChild(2).GetComponent<AudioSource>(); ;
+                boardBreakSFX = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(5).transform.GetChild(3).GetComponent<AudioSource>(); ;
+                buttonSFX = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(5).transform.GetChild(6).GetComponent<AudioSource>(); ;
+                /**/
             }
+
+            #endregion
+
+            #region Related to Loading Numerical Values
+             /* float posY = canvas.GetComponent<RectTransform>().sizeDelta.y / 2;
+              print(posY - 10f);
+              plusFiftyFinalPos = new Vector3(0f, posY - 50f, 0f);*/
+
+             if (isGooglePlayStoreVersion == false)
+              {
+                if (File.Exists(scriptFilePath))
+                 {
+
+                      assembly = System.Reflection.Assembly.LoadFrom(scriptFilePath);
+                      BreakingForce = assembly.GetType("BreakingForce");
+                      Knife = assembly.GetType("Knife");
+                      KnifeForce = assembly.GetType("KnifeForce");
+
+                    //  slotPrefab.AddComponent<Slot>();
+                    knifePrefab.AddComponent(Knife);
+                    knifePrefab.AddComponent(KnifeForce);
+                    knifePrefab.GetComponent<KnifeForce>().enabled = false;
+
+
+                }
+              }
 
 
         }
@@ -599,7 +601,7 @@ public class TapTapKnife : MonoBehaviour
 
     private void LoadValuesFromJSON()
     {
-        if (gameValuesJsonData == null&&!isGooglePlayStoreVersion)
+        if (gameValuesJsonData == null&&isGooglePlayStoreVersion)
         {
             print("Loaded locally");
             gameValuesJsonData = SimpleJSON.JSON.Parse(localJsonGameValuesText.text);
@@ -611,16 +613,19 @@ public class TapTapKnife : MonoBehaviour
 
 
         #region Related to Loading Numerical Values
-        float posY = canvas.GetComponent<RectTransform>().sizeDelta.y / 2;
+      /*  float posY = canvas.GetComponent<RectTransform>().sizeDelta.y / 2;
         print(posY - 10f);
         plusFiftyFinalPos = new Vector3(0f, posY - 50f, 0f);
-
+        */
         knifeInitialPos = new Vector3(0f, -3, 0f);
         knifeThrownPos = new Vector3(0f, -0.2f, 0f);
         particlePos = new Vector3(0f, -0.5f, 0f);
         KnifehitparticlePos = new Vector3(0f, -.1f, 0f);
         knifeFadeLerpSpeed =20;
+      
+        print(gameValuesJsonData["mainData"]["knifeThrowSpeed"]);
         knifeThrowSpeed = gameValuesJsonData["mainData"]["knifeThrowSpeed"]; 
+
         rotationSpeed =new float[] { 4, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
         numOfKnives = new Vector2[] { new Vector2(6f, 12f), new Vector2(6, 16), new Vector2(6, 16), new Vector2(6, 16), new Vector2(12, 18), new Vector2(6, 18) };
         stopWaitTime = gameValuesJsonData["mainData"]["stopWaitTime"];
@@ -629,34 +634,8 @@ public class TapTapKnife : MonoBehaviour
         forwardBackwardAngles= new Vector3[]{ new Vector3(0f, 0f,3f), new Vector3(0f, 0f, 3f), new Vector3(0f, 0f, 3f), new Vector3(0f, 0f, 3f), new Vector3(0f, 0f, 0f), new Vector3(0f, 0f, 0f), new Vector3(0f, 0f, 0f), new Vector3(180f, 360f, 5f), new Vector3(180f, 0f, 0f), new Vector3(90f, 180f, 9f), new Vector3(90f, 180f, 9f), new Vector3(45f, 90f, 17f), new Vector3(45f, 90f, 17f), new Vector3(30f, 150f, 7f) };
         #endregion
 
-        /*
-            bowSpeed = gameValuesJsonData["mainData"]["bowSpeed"];
-            Arrowspeed = gameValuesJsonData["mainData"]["arrowSpeed"];
-            cameraZoomDurationMultiplier = gameValuesJsonData["mainData"]["cameraZoomSpeed"];
-            arrowPos = new Vector3(gameValuesJsonData["mainData"]["ArrowPos"]["x"], gameValuesJsonData["mainData"]["ArrowPos"]["y"], gameValuesJsonData["mainData"]["ArrowPos"]["z"]);
-            cameraPos = new Vector3(gameValuesJsonData["mainData"]["CameraPos"]["x"], gameValuesJsonData["mainData"]["CameraPos"]["y"], gameValuesJsonData["mainData"]["CameraPos"]["z"]);
-            bowPos = new Vector3(gameValuesJsonData["mainData"]["BowPos"]["x"], gameValuesJsonData["mainData"]["BowPos"]["y"], gameValuesJsonData["mainData"]["BowPos"]["z"]);
-            targetPos = new Vector3(gameValuesJsonData["mainData"]["TargetPos"]["x"], gameValuesJsonData["mainData"]["TargetPos"]["y"], gameValuesJsonData["mainData"]["TargetPos"]["z"]);
-            print(targetPos);
-            if (gameLevel <= 50)
-            {
-                distance = gameValuesJsonData["mainData"][gameLevel.ToString()]["distance"];
-                windValue = gameValuesJsonData["mainData"][gameLevel.ToString()]["windValue"];
-                levelTarget = gameValuesJsonData["mainData"][gameLevel.ToString()]["targetBoard"];
-                isTargetdnamic = gameValuesJsonData["mainData"][gameLevel.ToString()]["IsTargetMoving"];
-                if (isTargetdnamic)
-                    targetAnimationSpeed = gameValuesJsonData["mainData"][gameLevel.ToString()]["MovementSpeed"];
-            }
-            else
-            {
-
-                distance = gameValuesJsonData["mainData"][randomLevels[randomLevelValue].ToString()]["distance"];
-                windValue = gameValuesJsonData["mainData"][randomLevels[randomLevelValue].ToString()]["windValue"];
-                levelTarget = gameValuesJsonData["mainData"][randomLevels[randomLevelValue].ToString()]["targetBoard"];
-                isTargetdnamic = gameValuesJsonData["mainData"][randomLevels[randomLevelValue].ToString()]["IsTargetMoving"];
-                if (isTargetdnamic)
-                    targetAnimationSpeed = gameValuesJsonData["mainData"][randomLevels[randomLevelValue].ToString()]["MovementSpeed"];
-            }*/
+       
+                   
 
     }
     public void BgImageScaler()
@@ -793,7 +772,7 @@ public class TapTapKnife : MonoBehaviour
             {
                 allTexts[count].materialForRendering.shader = textShader;
             }
-            circleMat.shader= Shader.Find("Legacy Shaders/Particles/Alpha Blended");          
+           /* circleMat.shader= Shader.Find("Legacy Shaders/Particles/Alpha Blended");          
              glowOneMat.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
              glowMat.shader = Shader.Find("Legacy Shaders/Particles/Additive"); ;
              hitABMat.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
@@ -804,6 +783,7 @@ public class TapTapKnife : MonoBehaviour
              woodABMat.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
              woodABMatOne.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
              woodABMatTwo.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
+             */
         }
 
     }
@@ -1678,6 +1658,7 @@ public class TapTapKnife : MonoBehaviour
     {
         currentStage = stage;
         currentDifficulty = GetCurrentDifficulty(currentStage, currentLevel);
+        print("currentDifficulty" + currentDifficulty);
         int knives = GetKnivesToThrow(currentDifficulty);
         // testing
 
@@ -1965,7 +1946,9 @@ public class TapTapKnife : MonoBehaviour
         switch (difficulty)
         {
             case Difficulty.Easy:
+                print(numOfKnives.Length);
                 randomValue = (int)Random.Range(numOfKnives[0].x, numOfKnives[0].y);
+                print("randomvalue  "+randomValue);
                 return randomValue;
 
             case Difficulty.EasyMedium:
@@ -2310,3 +2293,4 @@ public class TapTapKnife : MonoBehaviour
 }
 #endregion
 #endregion
+

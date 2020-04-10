@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class KnifeForce : MonoBehaviour
 {
-    [SerializeField] Vector2 direction;
+    [SerializeField] Vector2 direction = new Vector2();
     [SerializeField] float delay;
     [SerializeField] float gravity;
 
