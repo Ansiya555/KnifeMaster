@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 4073781490
+CRC: 2158784978
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f4d04b62ce58af8551c516aadcb9304a
+    Hash: 2d98d77ada5d70a56a404971cb795e88
   TypeTreeHash:
     serializedVersion: 2
-    Hash: b48ddb6035bc91977d3204929cf8b61c
+    Hash: 5459fb7ef1cd3506a038e082c31d19df
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -68,6 +68,8 @@ ClassTypes:
 - Class: 198
   Script: {instanceID: 0}
 - Class: 199
+  Script: {instanceID: 0}
+- Class: 200
   Script: {instanceID: 0}
 - Class: 212
   Script: {instanceID: 0}
@@ -163,6 +165,7 @@ Assets:
 - Assets/TapTapKnife/Art/Gameplay/Boards_/v2_10.png
 - Assets/TapTapKnife/Art/UI/end game titil.png
 - Assets/TapTapKnife/Art/Gameplay/bROKENBoards_ 1/07.png
+- Assets/AssetBundles/NewShaderVariants.shadervariants
 - Assets/TapTapKnife/VFX/Resources/Texture/Hit_txt.tga
 - Assets/TapTapKnife/VFX/Prefab/VFX_OnKnifeHit.prefab
 - Assets/TapTapKnife/Prefabs/Gameplay/Easy_Board_4.prefab

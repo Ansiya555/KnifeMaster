@@ -22,6 +22,7 @@ public class TapTapKnife : MonoBehaviour
     [SerializeField] Sprite[] boardSkins;
     [SerializeField] Sprite[] bonusBoardSkins;
     [SerializeField] GameObject[] brokenBoards;
+
     [SerializeField] GameObject[] bonusBrokenBoards;
     [SerializeField] GameObject knifePrefab;
 
@@ -203,6 +204,7 @@ public class TapTapKnife : MonoBehaviour
         audioSources.Add(buttonSFX);
         audioSources.Add(collectibleSFX);
         //   audioSources.Add();
+        //test
         
    
 }
@@ -343,7 +345,7 @@ public class TapTapKnife : MonoBehaviour
             brokenBoards[9] = mainAssetBundle.LoadAsset<GameObject>("V210");
             // brokenBoards[10] = mainAssetBundle.LoadAsset<GameObject>("v2_01");
 
-            bonusBrokenBoards = new GameObject[10];
+            bonusBrokenBoards = new GameObject[3];
             bonusBrokenBoards[0] = mainAssetBundle.LoadAsset<GameObject>("burger");
             bonusBrokenBoards[1] = mainAssetBundle.LoadAsset<GameObject>("Doughnut");
             bonusBrokenBoards[2] = mainAssetBundle.LoadAsset<GameObject>("pizza");
@@ -425,7 +427,8 @@ public class TapTapKnife : MonoBehaviour
             InActiveBonusDots = mainAssetBundle.LoadAsset<Sprite>("dots 0");
             VolumeOFF = mainAssetBundle.LoadAsset<Sprite>("No sound");
             VolumeOn = mainAssetBundle.LoadAsset<Sprite>("sound");
-            /* collectibleVFX = mainAssetBundle.LoadAsset<GameObject>("VFX_JellyBlast");
+            //testing
+            collectibleVFX = mainAssetBundle.LoadAsset<GameObject>("VFX_JellyBlast");
              knifeHitKnifeVfx = mainAssetBundle.LoadAsset<GameObject>("VFX_OnKnifeHit");
              boardHitVFX = mainAssetBundle.LoadAsset<GameObject>("VFX_KnifeHit");
              boardDestroyVFX = mainAssetBundle.LoadAsset<GameObject>("VFX_WoodenBoard Explosion V2");
@@ -442,7 +445,7 @@ public class TapTapKnife : MonoBehaviour
               woodABMatOne = mainAssetBundle.LoadAsset<Material>("Wood_AB_mat 1");
               woodABMatTwo = mainAssetBundle.LoadAsset<Material>("Wood_AB_mat 2");
 
-             */
+             
             #endregion
 
             #region Related to Child gameobjects
@@ -716,7 +719,7 @@ public class TapTapKnife : MonoBehaviour
             Debug.Log("mainAssetBundle " + assetBundleFilePath);
             if (File.Exists(assetBundleFilePath))
             {
-                mainAssetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
+              //  mainAssetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
             }
         }
 
@@ -759,7 +762,7 @@ public class TapTapKnife : MonoBehaviour
     Shader textShader;
     void SetMaterialShaders()
     {
-        if (!isGooglePlayStoreVersion)
+     
         {
             List<TextMeshProUGUI> allTexts = new List<TextMeshProUGUI>();
             allTexts.Add(scoreText);
@@ -772,18 +775,18 @@ public class TapTapKnife : MonoBehaviour
             {
                 allTexts[count].materialForRendering.shader = textShader;
             }
-           /* circleMat.shader= Shader.Find("Legacy Shaders/Particles/Alpha Blended");          
+             circleMat.shader= Shader.Find("Legacy Shaders/Particles/Alpha Blended");          
              glowOneMat.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
              glowMat.shader = Shader.Find("Legacy Shaders/Particles/Additive"); ;
              hitABMat.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
-             kHitABMat.shader = Shader.Find("Legacy Shaders/Particles/VertexLit Blended"); ;
+             kHitABMat.shader = Shader.Find("Legacy Shaders/Particles/Additive"); ;
              rayABMat.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
              ringABMat.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
              triangleSoftOne.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
              woodABMat.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
              woodABMatOne.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
              woodABMatTwo.shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended"); ;
-             */
+            
         }
 
     }
