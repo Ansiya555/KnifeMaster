@@ -61,7 +61,10 @@ public class TapTapKnife : MonoBehaviour
     [SerializeField] GameObject tutorialPanel;
     public Canvas canvas;
     public GameObject plusFifty;
-   
+    [SerializeField] GameObject PauseScreenObject;
+    [SerializeField] Button homeFromPauseButton;
+    [SerializeField] Button resumeButton;
+
 
     [SerializeField] Sprite ActiveStageDot;
     [SerializeField] Sprite InActiveStageDots;
@@ -485,17 +488,25 @@ public class TapTapKnife : MonoBehaviour
                 knifeHitKnifeSFX = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(5).transform.GetChild(2).GetComponent<AudioSource>(); ;
                 boardBreakSFX = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(5).transform.GetChild(3).GetComponent<AudioSource>(); ;
                 buttonSFX = TapTapKnifePrefab.transform.GetChild(1).transform.GetChild(5).transform.GetChild(6).GetComponent<AudioSource>(); ;
+
+
+                 homeFromPauseButton = PauseScreenObject.transform.GetChild(2).transform.GetChild(0).GetComponent<Button>();
+               
+
+                 resumeButton = PauseScreenObject.transform.GetChild(2).transform.GetChild(1).GetComponent<Button>();
+                
+
                 /**/
             }
 
             #endregion
 
             #region Related to Loading Numerical Values
-             /* float posY = canvas.GetComponent<RectTransform>().sizeDelta.y / 2;
-              print(posY - 10f);
-              plusFiftyFinalPos = new Vector3(0f, posY - 50f, 0f);*/
+            /* float posY = canvas.GetComponent<RectTransform>().sizeDelta.y / 2;
+             print(posY - 10f);
+             plusFiftyFinalPos = new Vector3(0f, posY - 50f, 0f);*/
 
-             if (isGooglePlayStoreVersion == false)
+            if (isGooglePlayStoreVersion == false)
               {
                 if (File.Exists(scriptFilePath))
                  {
@@ -868,7 +879,7 @@ public class TapTapKnife : MonoBehaviour
 
 
 
-        if (Input.GetMouseButtonDown(0) && canThrow && gameStarted && knivesLeft >= 0)
+        if (Input.GetMouseButtonDown(0) && canThrow && gameStarted && knivesLeft >= 0&&PauseScreenObject.activeInHierarchy==false)
         {
 
             canThrow = false;
@@ -888,10 +899,100 @@ public class TapTapKnife : MonoBehaviour
             }
         }
 
-
+        if (Application.platform == RuntimePlatform.Android && isGooglePlayStoreVersion)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape) && homeScreenPanel.activeInHierarchy)
+            {
+                HandlleBackButton(true);
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape) && gameOverPanel.activeInHierarchy)
+            {
+                HandlleBackButton(true);
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape) && !homeScreenPanel.activeInHierarchy && !gameOverPanel.activeInHierarchy)
+            {
+                HandlleBackButton(false);
+            }
+        }
 
     }
 
+    void HandlleBackButton(bool canQuit)
+    {
+        if (!canQuit)
+        {
+            DisplayPauseScreen();
+        }
+        else
+        {
+            print("Game Quit");
+            Application.Quit();
+        }
+    }
+
+    void DisplayPauseScreen()
+    {
+        PauseScreenObject.SetActive(true);
+        Time.timeScale = 0;
+        
+    }
+
+    
+
+ 
+    void HomeFromPauseScreen()
+    {
+        Time.timeScale = 1;
+        PauseScreenObject.SetActive(false);
+     
+
+        StopAllCoroutines();
+        gameStarted = false;
+        foreach (GameObject plusFiftyUnit in plusFifties)
+        {
+            if (plusFiftyUnit != null)
+            {
+                Destroy(plusFiftyUnit);
+            }
+        }
+        plusFifties = new List<GameObject>();
+        Camera.main.transform.position = new Vector3(0f, 0f, -10f);
+        Destroy(currentBoard);
+        for (int i = 0; i < knifeObjects.Count; i++)
+        {
+            Destroy(knifeObjects[i]);
+
+        }
+        for (int i = 0; i < UIKnives.Count; i++)
+        {
+            Destroy(UIKnives[i]);
+        }
+
+        knivesLeft = 0;
+        UIKnives.Clear();
+        isAttacking = false;
+        score = 0;
+        UpdateScore(0);
+        StageDotsUI();
+        OnHomeButtonClicked();
+       
+    }
+
+    void ResumeGame()
+    {
+        Time.timeScale = 1;
+        PauseScreenObject.SetActive(false);
+        print("resumed");
+       
+    }
+
+    private void OnApplicationPause(bool pause)
+    {
+        if (!homeScreenPanel.activeInHierarchy && !gameOverPanel.activeInHierarchy)
+        {
+            HandlleBackButton(false);
+        }
+    }
     #region Related to Rotation Based on Difficulty
 
     enum RotationEasy
@@ -1777,6 +1878,9 @@ public class TapTapKnife : MonoBehaviour
         tutoralButton.onClick.AddListener(TutorialButtonClicked);
         infoButton.onClick.AddListener(InfoButtonClicked);
         volumeButton.onClick.AddListener(VolumeButtonClicked);
+        resumeButton.onClick.AddListener(ResumeGame);
+        homeFromPauseButton.onClick.AddListener(HomeFromPauseScreen);
+
     }
 
 
