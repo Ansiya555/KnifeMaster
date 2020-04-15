@@ -1776,7 +1776,8 @@ public class TapTapKnife : MonoBehaviour
     }
 
     void StartGame()
-    {   sessionStartTime = (int)Time.realtimeSinceStartup;
+    {
+        sessionStartTime = (int)Time.realtimeSinceStartup;
         NextTurn(Stages.Stage_1);
     }
 

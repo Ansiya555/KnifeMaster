@@ -233,7 +233,7 @@ PrefabInstance:
     - target: {fileID: 3500335080832483794, guid: 0a373cdf04dbdc14fae26f768bf78f0c,
         type: 3}
       propertyPath: gameMainAssetUrl
-      value: https://d12ktb1j6jpksi.cloudfront.net/games/taptapknife/v1/downloadabledata/taptapknifemain.json.txt
+      value: https://d12ktb1j6jpksi.cloudfront.net/games/taptapknife/v1/downloadabledata/taptapknifemain.json
       objectReference: {fileID: 0}
     - target: {fileID: 3500335080832483795, guid: 0a373cdf04dbdc14fae26f768bf78f0c,
         type: 3}
