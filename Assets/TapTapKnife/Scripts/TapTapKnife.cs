@@ -577,6 +577,28 @@ public class TapTapKnife : MonoBehaviour
 
 
     }
+    #region Related to analytics
+    int numOfGamesPerSession = 0;
+    public int numberOfJelliesCollected =0;
+    int sessionStartTime, sessionEndTime;
+    int totalNumberOfPassedStages = 0;
+    public void SendGameoverAnalyticsEvents()
+      {
+          if(analyticsSetupDone && isGooglePlayStoreVersion)
+          {
+              if (!Analytics.gua.analyticsDisabled)
+              {
+                  Analytics.gua.sendEventHit("Gameplay","Game Over","Score",score);
+                  Analytics.gua.sendEventHit("Session Time", "Game Over", "Session Time", (sessionEndTime - sessionStartTime));
+             //     Analytics.gua.sendEventHit("Games Per Session", "Game Over", "Games Per Session", numOfGamesPerSession);
+                  Analytics.gua.sendEventHit("Jellies Collected", "Game Over","Jellies Collected", numberOfJelliesCollected);
+                  Analytics.gua.sendEventHit("Total Stages", "Game Over", "Total stages", totalNumberOfPassedStages);
+              }
+          }
+      }
+
+
+    #endregion
 
     IEnumerator GameValuesJsonLoader()
     {
@@ -1754,7 +1776,7 @@ public class TapTapKnife : MonoBehaviour
     }
 
     void StartGame()
-    {
+    {   sessionStartTime = (int)Time.realtimeSinceStartup;
         NextTurn(Stages.Stage_1);
     }
 
@@ -2170,7 +2192,7 @@ public class TapTapKnife : MonoBehaviour
             }
             GameObject temp = currentBoard;
             currentBoard = null;
-
+            totalNumberOfPassedStages += 1;
 
             for (int i = 0; i < knives.Count; i++)
             {
@@ -2272,6 +2294,14 @@ public class TapTapKnife : MonoBehaviour
 
     public IEnumerator GameOver()
     {
+        sessionEndTime = (int)Time.realtimeSinceStartup;
+        SendGameoverAnalyticsEvents();
+        numberOfJelliesCollected = 0;
+        totalNumberOfPassedStages = 0;
+
+
+
+
         yield return new WaitForSeconds(.25f);
         StopAllCoroutines();
         gameStarted = false;
