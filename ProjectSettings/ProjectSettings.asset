@@ -122,7 +122,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.0.0
+  bundleVersion: 1.0.1
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -170,9 +170,9 @@ PlayerSettings:
     Standalone: com.paytmfirstgames.taptapknife
   buildNumber:
     Standalone: 1.0.0
-  AndroidBundleVersionCode: 1000
+  AndroidBundleVersionCode: 1010
   AndroidMinSdkVersion: 16
-  AndroidTargetSdkVersion: 0
+  AndroidTargetSdkVersion: 28
   AndroidPreferredInstallLocation: 1
   aotOptions: 
   stripEngineCode: 1
@@ -263,8 +263,8 @@ PlayerSettings:
   AndroidTargetArchitectures: 3
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/rasik/Downloads/Keystores/taptapknife.keystore
-  AndroidKeyaliasName: taptapknife
+  AndroidKeystoreName: C:/Users/rasik/Downloads/Keystores/shakytower.keystore
+  AndroidKeyaliasName: shakytower
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 0
   AndroidIsGame: 1

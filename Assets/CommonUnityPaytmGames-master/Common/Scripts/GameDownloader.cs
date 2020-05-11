@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Reflection;
 using System;
-//using Strobotnik.GUA;
+using Strobotnik.GUA;
 
 public class GameDownloader : MonoBehaviour
 {
@@ -110,7 +110,7 @@ public class GameDownloader : MonoBehaviour
     {
         if (isTargetGooglePlayStore())
         {
-            const string echoServer = "http://google.com";
+            /*const string echoServer = "http://google.com";
 
             bool result = false;
             using (var request = UnityWebRequest.Head(echoServer))
@@ -119,18 +119,26 @@ public class GameDownloader : MonoBehaviour
                 yield return request.SendWebRequest();
                 result = !request.isNetworkError && !request.isHttpError && request.responseCode == 200;
             }
-            isInternetConnectionAvailable = result;
+            isInternetConnectionAvailable = result;*/
+
+            if (useLocalGamePrefab)
+            {
+                isInternetConnectionAvailable = true;
+                yield return new WaitForEndOfFrame();
+                StartCoroutine(LoadMainJsonData(gameMainAssetUrl));
+                //SetupLocalGamePrefab();
+            }
         }
         else
         {
             isInternetConnectionAvailable = true;
+            DownloadMainJsonData();
         }
-        DownloadMainJsonData();
     }
 
     public void DownloadMainJsonData()
     {
-        StartCoroutine(LoadMainJsonData(gameMainAssetUrl));
+        StartCoroutine(LoadAssetBundleAndDLL(gameMainAssetUrl));
     }
 
     public void ShowLoadingCanvas()
@@ -199,7 +207,6 @@ public class GameDownloader : MonoBehaviour
     [HideInInspector]
     public bool isInternetConnectionAvailable = false;
 
-    [HideInInspector]
     public AssetBundle assetBundle = null;
 
     public AssetBundle GetMainAssetBundle()
@@ -225,7 +232,8 @@ public class GameDownloader : MonoBehaviour
     string scriptFileName;
     string assetBundleFilePath;
     string scriptFilePath;
-    IEnumerator LoadMainJsonData(string url)
+
+    IEnumerator LoadAssetBundleAndDLL(string url)
     {
         int assetBundleVersion = 0;
         int scriptDLLVersion = 0;
@@ -279,7 +287,7 @@ public class GameDownloader : MonoBehaviour
                 assetBundleVersion = PlayerPrefs.GetInt(devGameName + "assetBundleVersion");
                 newAssetBundleVersion = mainJsonData["mainData"]["assetbundleversion"];
 
-                #region Related to AssetBundle
+                #region Related to AssetBundle                
 
                 bool isNewAssetBundleVersionAvailable = false;
                 if (assetBundleVersion < newAssetBundleVersion) { isNewAssetBundleVersionAvailable = true; }
@@ -368,6 +376,18 @@ public class GameDownloader : MonoBehaviour
             loadGameFromLocalStoredAssetBundle = true;
         }
 
+        if (isTargetPaytmFirstGamesStore())
+        {
+            if (assetBundle != null)
+            {
+                assetBundle.Unload(false);
+            }
+            GameObject tempObject = new GameObject(devGameName);
+            assembly = Assembly.LoadFrom(scriptFilePath);
+            Type mainScript = assembly.GetType(devGameName);
+            tempObject.AddComponent(mainScript);
+        }
+
         if (loadGameFromLocalStoredAssetBundle)
         {
             if (showDebug)
@@ -404,22 +424,98 @@ public class GameDownloader : MonoBehaviour
             }
         }
 
-        if (isTargetPaytmFirstGamesStore())
+        if (useLocalGamePrefab)
         {
+            SetTargetLoadingBarImageAmount(0.75f);
+            yield return new WaitForSeconds(1f);
+            SetupLocalGamePrefab();
+        }
+    }
+
+    IEnumerator LoadMainJsonData(string url)
+    {
+        gameFolderName = devGameName + "Data";
+        folderPath = Application.persistentDataPath + "/" + gameFolderName;
+
+        if (showDebug)
+            print("isInternetConnectionAvailable " + isInternetConnectionAvailable);
+
+        if (isInternetConnectionAvailable)
+        {
+            WWW www = new WWW(url);
+            yield return www;
+            if (www.error == null)
+            {
+                if (showDebug)
+                    print(www.text);
+
+                mainJsonData = SimpleJSON.JSON.Parse(www.text);
+
+                PlayerPrefs.SetString(devGameName + "mainJsonDataText", www.text);
+
+                if (showDebug)
+                    print(mainJsonData);
+
+                SetTargetLoadingBarImageAmount(0.25f);
+
+                devGameName = mainJsonData["mainData"]["devGameName"];
+            }
+            else
+            {
+                loadGameFromLocalStoredAssetBundle = true;
+                if (showDebug)
+                {
+                    Debug.LogError("url");
+                    Debug.LogError(url);
+                    Debug.LogError("Could not load main json data");
+                }
+            }
+        }
+        else
+        {
+            loadGameFromLocalStoredAssetBundle = true;
+        }
+
+        if (loadGameFromLocalStoredAssetBundle)
+        {
+            if (showDebug)
+                print("checking loading locally stored asset bundle");
+
+            if (File.Exists(assetBundleFilePath))
+            {
+                if (assetBundle == null)
+                {
+                    assetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
+                }
+            }
+
+            if (showDebug)
+                print(assetBundle);
+
             if (assetBundle != null)
             {
-                assetBundle.Unload(false);
+                if (assetBundle.Contains(devGameName + "Game"))
+                {
+                    //var loadAsset = (assetBundle.LoadAssetAsync<GameObject>(devGameName + "Game"));
+                    //yield return loadAsset;
+                    //Instantiate(loadAsset.asset);
+                    SetTargetLoadingBarImageAmount(0.75f);
+                }
+                else
+                {
+                    useLocalGamePrefab = true;
+                }
             }
-            GameObject tempObject = new GameObject(devGameName);
-            assembly = Assembly.LoadFrom(scriptFilePath);
-            Type mainScript = assembly.GetType("TapTapKnife");
-            tempObject.AddComponent(mainScript);
+            else
+            {
+                useLocalGamePrefab = true;
+            }
         }
 
         if (useLocalGamePrefab)
         {
             SetTargetLoadingBarImageAmount(0.75f);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForEndOfFrame();
             SetupLocalGamePrefab();
         }
     }

@@ -216,13 +216,23 @@ public class TapTapKnife : MonoBehaviour
     IEnumerator Start()
     {
         SetScreenOrientation();
-        isGooglePlayStoreVersion = false;
+        isGooglePlayStoreVersion = GameDownloader.instance.isTargetGooglePlayStore();
+
+        //isGooglePlayStoreVersion = false;
         devGameName = "TapTapKnife";
 
         gameTitle = "Tap Tap Knife";
         paytmGamesLink = "https://paytmfirstgames.com/";
 
-        GetMainAssetBundleAndMainJsonData();
+        if (!isGooglePlayStoreVersion)
+        {
+            GetMainAssetBundleAndJsonData();
+        }
+        else
+        {
+            GetMainJsonDataGoogleVersion();
+        }
+
         SetStringsFromMainJsonAndLoadPrefs();
       
         StartCoroutine(GameValuesJsonLoader());
@@ -249,7 +259,6 @@ public class TapTapKnife : MonoBehaviour
               yield return new WaitForSeconds(1f);
 
           }*/
-        yield return new WaitForSeconds(8f);
         StartGame();
         string loadingBarAmountPrefsText = "LoadingBarFillAmount";
         PlayerPrefs.SetFloat(devGameName + loadingBarAmountPrefsText, 1f);
@@ -296,24 +305,17 @@ public class TapTapKnife : MonoBehaviour
             useLocalGamePrefab = gameDownloader.useLocalGamePrefab;
         }
 
-        if (mainAssetBundle != null)
+        TapTapKnifePrefab = this.gameObject.transform.gameObject;
+
+        if (mainAssetBundle != null && !isGooglePlayStoreVersion)
         {
             print("assets loaded from bundle");
-            if (isGooglePlayStoreVersion)
-            {
-                TapTapKnifePrefab = this.gameObject.transform.gameObject;
-
-            }
-            else
-            {
-                TapTapKnifePrefab = Instantiate(mainAssetBundle.LoadAsset<GameObject>("TapTapKnifeGame"));
-
-            }
-
+            
+            TapTapKnifePrefab = Instantiate(mainAssetBundle.LoadAsset<GameObject>("TapTapKnifeGame"));
 
             #region related to prefab and art assets loading from assetbundle
-         
-          
+
+
             if (mainAssetBundle.LoadAsset<Sprite>("v2_01") != null)
             {
                 print("assetbundle contains sprites");
@@ -702,9 +704,25 @@ public class TapTapKnife : MonoBehaviour
 
     }
 
-    public void GetMainAssetBundleAndMainJsonData()
+    void GetMainJsonDataGoogleVersion()
     {
-        mainJsonData = null;
+        if (mainJsonData == null)
+        {
+            mainJsonDataText = PlayerPrefs.GetString(devGameName + "mainJsonDataText");
+            print("mainJsonDataText");
+            print(mainJsonDataText);
+            if (mainJsonDataText.Length > 10)
+            {
+                mainJsonData = SimpleJSON.JSON.Parse(mainJsonDataText);
+            }
+            print("mainJsonData");
+            print(mainJsonData);
+        }
+
+    }
+
+    public void GetMainAssetBundleAndJsonData()
+    {
         isGooglePlayStoreVersion = false;
 
         gameDownloader = GameDownloader.instance;
@@ -729,7 +747,7 @@ public class TapTapKnife : MonoBehaviour
             }
             if (gameDownloader == null)
             {
-                Debug.Log("GameDownloader component not found");
+                print("GameDownloader component not found");
             }
             else
             {
@@ -743,16 +761,16 @@ public class TapTapKnife : MonoBehaviour
         }
         else
         {
-            Debug.Log("GameDownloader Gameobject not found");
+            print("GameDownloader Gameobject not found");
         }
 
         if (mainAssetBundle == null)
         {
             string assetBundleFilePath = PlayerPrefs.GetString(devGameName + "assetBundleFilePath");
-            Debug.Log("mainAssetBundle " + assetBundleFilePath);
             if (File.Exists(assetBundleFilePath))
             {
-              //  mainAssetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
+                print("mainAssetBundle " + assetBundleFilePath);
+                mainAssetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
             }
         }
 
@@ -770,6 +788,7 @@ public class TapTapKnife : MonoBehaviour
         }
 
         scriptFilePath = PlayerPrefs.GetString(devGameName + "scriptFilePath");
+
     }
 
     public void SetStringsFromMainJsonAndLoadPrefs()
